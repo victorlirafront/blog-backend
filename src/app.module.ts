@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { BlogPost } from './typeorm/entities/BlogPost';
-import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ dotenv.config();
       entities: [BlogPost],
       synchronize: true,
     }),
-    UsersModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

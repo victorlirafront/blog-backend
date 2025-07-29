@@ -9,10 +9,10 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { CreatePostDto } from 'src/posts/dtos/CreatePost.dto';
+import { UpdatePostDto } from 'src/posts/dtos/UpdatePost.dto';
+import { PostsService } from 'src/posts/services/posts/posts.service';
 import { BlogPost } from 'src/typeorm/entities/BlogPost';
-import { CreatePostDto } from 'src/users/dtos/CreatePost.dto';
-import { UpdatePostDto } from 'src/users/dtos/UpdatePost.dto';
-import { PostsService } from 'src/users/services/users/users.service';
 
 @Controller('posts')
 export class PostsController {
