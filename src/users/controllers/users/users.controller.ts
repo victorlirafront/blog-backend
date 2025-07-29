@@ -19,19 +19,12 @@ export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Get()
-  async getPosts() {
-    const posts = await this.postsService.findPosts();
-    return posts;
-  }
-
-  @Get('published')
-  async getPublishedPosts() {
-    const posts = await this.postsService.findPublishedPosts();
-    return posts;
+  async getPosts(): Promise<BlogPost[]> {
+    return this.postsService.findPosts();
   }
 
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {
+  createPost(@Body() createPostDto: CreatePostDto): Promise<BlogPost> {
     return this.postsService.createPost(createPostDto);
   }
 
@@ -39,12 +32,12 @@ export class PostsController {
   async updatePostById(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePostDto: UpdatePostDto,
-  ) {
+  ): Promise<void> {
     await this.postsService.updatePost(id, updatePostDto);
   }
 
   @Delete(':id')
-  async deletePostById(@Param('id', ParseIntPipe) id: number) {
+  async deletePostById(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.postsService.deletePost(id);
   }
 
@@ -60,13 +53,15 @@ export class PostsController {
     return this.postsService.findByAuthor(author);
   }
 
-  @Get('tags/:tags')
-  async findPostsByTags(@Param('tags') tags: string): Promise<BlogPost[]> {
-    return this.postsService.findByTags(tags);
+  @Get('category/:category')
+  async findPostsByCategory(
+    @Param('category') category: string,
+  ): Promise<BlogPost[]> {
+    return this.postsService.findByCategory(category);
   }
 
   @Get(':id')
-  async findPostById(@Param('id') id: number): Promise<BlogPost> {
+  async findPostById(@Param('id', ParseIntPipe) id: number): Promise<BlogPost> {
     return this.postsService.findById(id);
   }
 }

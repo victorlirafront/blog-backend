@@ -1,12 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
-  name: 'post',
+  name: 'posts',
 })
 export class BlogPost {
-  @PrimaryGeneratedColumn({
-    type: 'bigint',
-  })
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column()
@@ -19,14 +17,20 @@ export class BlogPost {
   author: string;
 
   @Column()
-  createdAt: Date;
+  date: Date;
 
   @Column()
-  updatedAt: Date;
+  category: string;
 
-  @Column({ default: false })
-  published: boolean;
+  @Column()
+  meta_tag_title: string;
 
-  @Column({ nullable: true })
-  tags: string;
+  @Column()
+  meta_tag_description: string;
+
+  @Column()
+  post_image: string;
+
+  @Column()
+  post_background: string;
 }

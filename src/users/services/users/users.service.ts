@@ -14,25 +14,16 @@ export class PostsService {
     return this.postRepository.find();
   }
 
-  findPublishedPosts() {
-    return this.postRepository.find({ where: { published: true } });
-  }
-
   createPost(postDetails: CreatePostParams) {
     const newPost = this.postRepository.create({
       ...postDetails,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
     return this.postRepository.save(newPost);
   }
 
   updatePost(id: number, updatePostDetails: UpdatePostParams) {
-    return this.postRepository.update(
-      { id },
-      { ...updatePostDetails, updatedAt: new Date() },
-    );
+    return this.postRepository.update({ id }, { ...updatePostDetails });
   }
 
   deletePost(id: number) {
@@ -40,16 +31,16 @@ export class PostsService {
   }
 
   async searchPosts(searchTerm: string): Promise<BlogPost[]> {
-    const posts = await this.postRepository.find({
+    return this.postRepository.find({
       where: [
         { title: Like(`%${searchTerm}%`) },
         { content: Like(`%${searchTerm}%`) },
         { author: Like(`%${searchTerm}%`) },
-        { tags: Like(`%${searchTerm}%`) },
+        { category: Like(`%${searchTerm}%`) },
+        { meta_tag_title: Like(`%${searchTerm}%`) },
+        { meta_tag_description: Like(`%${searchTerm}%`) },
       ],
     });
-
-    return posts;
   }
 
   async findById(id: number): Promise<BlogPost> {
@@ -66,7 +57,7 @@ export class PostsService {
     return this.postRepository.find({ where: { author } });
   }
 
-  async findByTags(tags: string): Promise<BlogPost[]> {
-    return this.postRepository.find({ where: { tags: Like(`%${tags}%`) } });
+  async findByCategory(category: string): Promise<BlogPost[]> {
+    return this.postRepository.find({ where: { category } });
   }
 }
