@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { BlogPost } from '../entities/BlogPost';
+import { PostModel } from '../modules/posts/models/post.model';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,7 +11,7 @@ const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [BlogPost],
+  entities: [PostModel],
   synchronize: true,
 });
 
@@ -24,7 +24,7 @@ async function seed() {
     process.exit(1);
   }
   await dataSource.initialize();
-  const postRepo = dataSource.getRepository(BlogPost);
+  const postRepo = dataSource.getRepository(PostModel);
 
   const posts = [
     {
