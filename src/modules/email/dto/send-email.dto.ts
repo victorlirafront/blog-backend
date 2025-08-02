@@ -11,7 +11,7 @@ export class SendEmailDto {
 
   @IsString()
   @IsNotEmpty()
-  phone: string;
+  cellphone: string;
 
   @IsString()
   @IsNotEmpty()

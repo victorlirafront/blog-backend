@@ -26,9 +26,7 @@ export class EmailService {
   }
 
   async sendEmail(data: SendEmailDto): Promise<void> {
-    const { name, email, phone, subject, message } = data;
-
-    console.log('Sending email with data:', { name, email, phone, subject });
+    const { name, email, cellphone, subject, message } = data;
 
     const mailOptions = {
       from: {
@@ -39,7 +37,7 @@ export class EmailService {
       subject: `${subject} ✔`,
       text: 'Hello world?',
       html: `
-        <p> celular: ${phone} </p>
+        <p> celular: ${cellphone} </p>
         <p> email: ${email} </p>
         <p> mensagem: ${message} </p>
       `,
