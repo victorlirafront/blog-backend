@@ -9,8 +9,8 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { PostService } from '../models/post.service';
-import { CreatePostDto, UpdatePostDto, PaginationDto } from '../views/post.dto';
+import { PostService } from '../services/post.service';
+import { CreatePostDto, UpdatePostDto, PaginationDto } from '../dto';
 import { PaginationResponse, PostResponse } from '../views/post.response';
 
 @Controller('posts')

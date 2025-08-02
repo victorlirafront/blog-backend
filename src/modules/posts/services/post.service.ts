@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import { PostModel } from './post.model';
-import { CreatePostDto, UpdatePostDto, PaginationDto } from '../views/post.dto';
+import { CreatePostDto, UpdatePostDto, PaginationDto } from '../dto';
 import { PaginationResponse, PostResponse } from '../views/post.response';
+import { PostModel } from '../models/post.model';
 
 @Injectable()
 export class PostService {
