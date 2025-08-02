@@ -24,7 +24,7 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body() createPostDto: any): Promise<BlogPost> {
+  createPost(@Body() createPostDto: CreatePostDto): Promise<BlogPost> {
     return this.postsService.createPost(createPostDto);
   }
 

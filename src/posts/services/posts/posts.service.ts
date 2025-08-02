@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BlogPost } from 'src/entities/BlogPost';
 import { Like, Repository } from 'typeorm';
-import { CreatePostParams, /*UpdatePostParams*/ } from '../../../utils/types';
+import { CreatePostParams, UpdatePostParams } from '../../../types/post';
 
 @Injectable()
 export class PostsService {
@@ -22,7 +22,7 @@ export class PostsService {
     return this.postRepository.save(newPost);
   }
 
-  updatePost(id: number, updatePostDetails: any) {
+  updatePost(id: number, updatePostDetails: UpdatePostParams) {
     return this.postRepository.update({ id }, { ...updatePostDetails });
   }
 
