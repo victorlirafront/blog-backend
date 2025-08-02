@@ -23,4 +23,4 @@ export interface PostResponse {
   post_background?: string;
   keywords?: string;
   updated_at: Date;
-} 
+}

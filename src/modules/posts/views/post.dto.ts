@@ -82,4 +82,4 @@ export class PaginationDto {
 
   @IsOptional()
   limit?: number = 8;
-} 
+}

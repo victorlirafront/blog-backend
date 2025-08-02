@@ -32,9 +32,11 @@ export class PostService {
     return results;
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<PaginationResponse<PostResponse>> {
+  async findAll(
+    paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<PostResponse>> {
     const { page = 1, limit = 8 } = paginationDto;
-    
+
     const posts = await this.postRepository.find({
       order: { date: 'DESC' },
     });
@@ -63,14 +65,9 @@ export class PostService {
 
   async search(searchTerm: string): Promise<PostResponse[]> {
     return this.postRepository.find({
-      where: [
-        { title: Like(`%${searchTerm}%`) },
-        { content: Like(`%${searchTerm}%`) },
-        { author: Like(`%${searchTerm}%`) },
-        { category: Like(`%${searchTerm}%`) },
-        { meta_tag_title: Like(`%${searchTerm}%`) },
-        { meta_tag_description: Like(`%${searchTerm}%`) },
-      ],
+      where: {
+        title: Like(`%${searchTerm}%`),
+      },
     });
   }
 
@@ -91,4 +88,4 @@ export class PostService {
   async findByCategory(category: string): Promise<PostResponse[]> {
     return this.postRepository.find({ where: { category } });
   }
-} 
+}

@@ -11,4 +11,4 @@ export class PaginationDto {
   @Type(() => Number)
   @Min(1)
   limit?: number = 8;
-} 
+}

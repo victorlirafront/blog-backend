@@ -18,7 +18,9 @@ export class PostController {
   constructor(private postService: PostService) {}
 
   @Get()
-  async findAll(@Query() paginationDto: PaginationDto): Promise<PaginationResponse<PostResponse>> {
+  async findAll(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<PostResponse>> {
     return this.postService.findAll(paginationDto);
   }
 
@@ -51,7 +53,9 @@ export class PostController {
   }
 
   @Get('category/:category')
-  async findByCategory(@Param('category') category: string): Promise<PostResponse[]> {
+  async findByCategory(
+    @Param('category') category: string,
+  ): Promise<PostResponse[]> {
     return this.postService.findByCategory(category);
   }
 
@@ -59,4 +63,4 @@ export class PostController {
   async findById(@Param('id', ParseIntPipe) id: number): Promise<PostResponse> {
     return this.postService.findById(id);
   }
-} 
+}

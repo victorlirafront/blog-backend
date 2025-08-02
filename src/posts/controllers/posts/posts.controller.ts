@@ -21,7 +21,9 @@ export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Get()
-  async getPosts(@Query() paginationDto: PaginationDto): Promise<PaginationResponse<BlogPost>> {
+  async getPosts(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<BlogPost>> {
     return this.postsService.findPosts(paginationDto);
   }
 

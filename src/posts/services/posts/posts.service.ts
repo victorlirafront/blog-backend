@@ -33,9 +33,11 @@ export class PostsService {
     return results;
   }
 
-  async findPosts(paginationDto: PaginationDto): Promise<PaginationResponse<BlogPost>> {
+  async findPosts(
+    paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<BlogPost>> {
     const { page = 1, limit = 8 } = paginationDto;
-    
+
     const posts = await this.postRepository.find({
       order: { date: 'DESC' },
     });

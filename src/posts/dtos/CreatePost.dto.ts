@@ -8,5 +8,5 @@ export class CreatePostDto {
   meta_tag_description: string;
   post_image: string;
   post_background: string;
-  keywords: string
+  keywords: string;
 }

@@ -8,4 +8,4 @@ export interface PaginationResponse<T> {
   previous?: PaginationMeta;
   totalPages: number;
   results: T[];
-} 
+}

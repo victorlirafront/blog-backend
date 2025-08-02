@@ -10,4 +10,4 @@ import { PostModel } from './models/post.model';
   providers: [PostService],
   exports: [PostService],
 })
-export class PostsModule {} 
+export class PostsModule {}

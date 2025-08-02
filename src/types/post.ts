@@ -8,7 +8,7 @@ export type CreatePostParams = {
   meta_tag_description: string;
   post_image: string;
   post_background: string;
-  keywords: string
+  keywords: string;
 };
 
 export type UpdatePostParams = {
@@ -21,5 +21,5 @@ export type UpdatePostParams = {
   meta_tag_description: string;
   post_image: string;
   post_background: string;
-  keywords: string
+  keywords: string;
 };
