@@ -13,7 +13,7 @@ import { PostService } from '../services/post.service';
 import { CreatePostDto, UpdatePostDto, PaginationDto } from '../dto';
 import { PaginationResponse, PostResponse } from '../views/post.response';
 
-@Controller('posts')
+@Controller('get')
 export class PostController {
   constructor(private postService: PostService) {}
 
