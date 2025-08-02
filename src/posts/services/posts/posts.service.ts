@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BlogPost } from 'src/entities/BlogPost';
 import { Like, Repository } from 'typeorm';
 import { CreatePostParams, UpdatePostParams } from '../../../types/post';
+import { PaginationDto } from '../../dtos/Pagination.dto';
+import { PaginationResponse } from '../../types/pagination.types';
 
 @Injectable()
 export class PostsService {
@@ -10,8 +12,35 @@ export class PostsService {
     @InjectRepository(BlogPost) private postRepository: Repository<BlogPost>,
   ) {}
 
-  findPosts() {
-    return this.postRepository.find();
+  private paginate<T>(data: T[], page = 1, limit = 8): PaginationResponse<T> {
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const results: PaginationResponse<T> = {
+      results: [],
+      totalPages: Math.ceil(data.length / limit),
+    };
+
+    if (endIndex < data.length) {
+      results.next = { page: page + 1, limit };
+    }
+
+    if (startIndex > 0) {
+      results.previous = { page: page - 1, limit };
+    }
+
+    results.results = [...data].slice(startIndex, endIndex);
+
+    return results;
+  }
+
+  async findPosts(paginationDto: PaginationDto): Promise<PaginationResponse<BlogPost>> {
+    const { page = 1, limit = 8 } = paginationDto;
+    
+    const posts = await this.postRepository.find({
+      order: { date: 'DESC' },
+    });
+
+    return this.paginate(posts, page, limit);
   }
 
   createPost(postDetails: CreatePostParams) {
