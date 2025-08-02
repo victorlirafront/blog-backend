@@ -33,4 +33,7 @@ export class BlogPost {
 
   @Column()
   post_background: string;
+
+  @Column()
+  keywords: string;
 }

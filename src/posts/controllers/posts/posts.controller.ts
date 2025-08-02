@@ -12,7 +12,7 @@ import {
 import { CreatePostDto } from 'src/posts/dtos/CreatePost.dto';
 import { UpdatePostDto } from 'src/posts/dtos/UpdatePost.dto';
 import { PostsService } from 'src/posts/services/posts/posts.service';
-import { BlogPost } from 'src/typeorm/entities/BlogPost';
+import { BlogPost } from 'src/entities/BlogPost';
 
 @Controller('posts')
 export class PostsController {

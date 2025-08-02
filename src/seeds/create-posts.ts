@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { BlogPost } from '../typeorm/entities/BlogPost';
+import { BlogPost } from '../entities/BlogPost';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -38,6 +38,7 @@ async function seed() {
       meta_tag_description: 'SEO Desc 1',
       post_image: 'image1.jpg',
       post_background: 'bg1.jpg',
+      keywords: "javascript, java"
     },
     {
       title: 'Post 2',
@@ -49,6 +50,7 @@ async function seed() {
       meta_tag_description: 'SEO Desc 2',
       post_image: 'image2.jpg',
       post_background: 'bg2.jpg',
+      keywords: "javascript, java"
     },
     {
       title: 'Post 3',
@@ -60,6 +62,7 @@ async function seed() {
       meta_tag_description: 'SEO Desc 3',
       post_image: 'image3.jpg',
       post_background: 'bg3.jpg',
+      keywords: "javascript, java"
     },
   ];
 
