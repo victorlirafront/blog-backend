@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './modules/posts/posts.module';
 import { EmailModule } from './modules/email/email.module';
-import { PostModel } from './modules/posts/models/post.model';
+import { PostModel } from './modules/posts/entities/post.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
