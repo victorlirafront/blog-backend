@@ -16,13 +16,21 @@ const dataSource = new DataSource({
 });
 
 async function seed() {
+
+  if (
+    process.env.NODE_ENV === 'production' ||
+    process.env.DB_HOST?.includes('prod-host')
+  ) {
+    console.error('🚫 Seed command is disabled in production environment.');
+    process.exit(1);
+  }
   await dataSource.initialize();
   const postRepo = dataSource.getRepository(BlogPost);
 
   const posts = [
     {
       title: 'Post 1',
-      content: 'Conteúdo do post 1',
+      content: 'Conteúdo do post 1...',
       author: 'Victor',
       date: new Date(),
       category: 'Tech',
