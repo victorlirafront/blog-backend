@@ -19,7 +19,6 @@
 * [NestJS](https://nestjs.com/)
 * [TypeORM](https://typeorm.io/)
 * [MySQL](https://www.mysql.com/)
-* [XAMPP](https://www.apachefriends.org/pt_br/index.html)
 
 ---
 
