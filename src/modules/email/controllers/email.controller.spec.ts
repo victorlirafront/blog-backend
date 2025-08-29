@@ -42,7 +42,6 @@ describe('EmailController', () => {
         message: 'Olá! Gostaria de saber mais sobre os serviços.',
       };
 
-      const expectedResponse = new EmailResponse('Email enviado com sucesso');
       mockEmailService.sendEmail.mockResolvedValue(undefined);
 
       // Act
