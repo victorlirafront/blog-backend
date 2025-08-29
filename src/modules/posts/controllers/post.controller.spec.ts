@@ -64,4 +64,4 @@ describe('PostController', () => {
       expect(result.results[0].title).toBe('Test Post');
     });
   });
-}); 
+});

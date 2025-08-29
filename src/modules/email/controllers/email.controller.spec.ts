@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EmailController } from './email.controller';
 import { EmailService } from '../services/email.service';
 import { SendEmailDto } from '../dto/send-email.dto';
-import { EmailResponse } from '../views/email.response';
 
 describe('EmailController', () => {
   let controller: EmailController;
@@ -54,4 +53,4 @@ describe('EmailController', () => {
       expect(result.timestamp).toBeInstanceOf(Date);
     });
   });
-}); 
+});
