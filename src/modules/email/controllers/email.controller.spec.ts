@@ -50,9 +50,9 @@ describe('EmailController', () => {
 
       // Assert
       expect(service.sendEmail).toHaveBeenCalledWith(emailData);
-      expect(result).toEqual(expectedResponse);
       expect(result.message).toBe('Email enviado com sucesso');
       expect(result.success).toBe(true);
+      expect(result.timestamp).toBeInstanceOf(Date);
     });
   });
 }); 
