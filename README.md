@@ -33,7 +33,8 @@ npm install
 ## 🛠️ Configuração do Banco de Dados
 
 1. Instale e abra o **XAMPP** para iniciar o MySQL.
-2. Crie um banco de dados com o nome:
+2. Acesse: http://localhost/phpmyadmin/
+3. Crie um banco de dados com o nome:
 
 ```
 blog_db
