@@ -19,7 +19,7 @@ dotenv.config();
       password: process.env.PASSWORD,
       database: process.env.DATABASE,
       entities: [PostModel],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production', //nunca deixe como true, isso afetara as tabelas do banco em prod
     }),
     PostsModule,
     EmailModule,
