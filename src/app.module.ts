@@ -13,13 +13,13 @@ dotenv.config();
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.USERNAME,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
+      host: process.env.BLOG_HOST,
+      port: Number(process.env.BLOG_DB_PORT),
+      username: process.env.BLOG_USERNAME,
+      password: process.env.BLOG_PASSWORD,
+      database: process.env.BLOG_DATABASE,
       entities: [PostModel],
-      synchronize: process.env.NODE_ENV !== 'production', //nunca deixe como true, isso afetara as tabelas do banco em prod, estudar isso depois
+      synchronize: process.env.BLOG_NODE_ENV !== 'production', //nunca deixe como true, isso afetara as tabelas do banco em prod, estudar isso depois
     }),
     PostsModule,
     EmailModule,

@@ -43,7 +43,9 @@ export class PostController {
   }
 
   @Get('search')
-  async search(@Query('query') searchTerm: string): Promise<PostResponse[]> {
+  async search(
+    @Query('query') searchTerm: string,
+  ): Promise<PaginationResponse<PostResponse>> {
     return this.postService.search(searchTerm);
   }
 

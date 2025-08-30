@@ -6,19 +6,20 @@ dotenv.config();
 
 const dataSource = new DataSource({
   type: 'mysql',
-  host: process.env.HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD,
   database: process.env.DATABASE,
+  host: process.env.BLOG_HOST || 'localhost',
+  port: Number(process.env.BLOG_DB_PORT) || 3306,
+  username: process.env.BLOG_USERNAME || 'root',
+  password: process.env.BLOG_PASSWORD || '',
+  database: process.env.BLOG_DATABASE || 'blog_db',
   entities: [PostModel],
   synchronize: true,
 });
 
 async function seed() {
   if (
-    process.env.NODE_ENV === 'production' ||
-    process.env.HOST?.includes('clever-cloud')
+    process.env.BLOG_NODE_ENV === 'production' ||
+    process.env.BLOG_HOST?.includes('clever-cloud')
   ) {
     console.error('🚫 Seed command is disabled in production environment.');
     process.exit(1);

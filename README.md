@@ -11,6 +11,17 @@ Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e 
 - **Railway** - Deploy e hosting
 - **Jest** - Testes unitários
 
+## 📋 Requisitos
+
+### **Para desenvolvimento local:**
+- **Node.js** 18+ 
+- **XAMPP** (MySQL)
+- **Git**
+
+### **Para Docker:**
+- **Docker** e **Docker Compose**
+- **XAMPP** (MySQL)
+
 ## 🛠️ Instalação Local
 
 1. **Clone o repositório:**
@@ -20,33 +31,45 @@ cd blog-backend
 ```
 
 2. **Configure as variáveis de ambiente:**
-```bash
-# Crie um arquivo .env com suas credenciais
-DB_HOST=seu-host-mysql
+Crie um arquivo `.env` na raiz do projeto:
+```env
+# development
+HOST=localhost
 DB_PORT=3306
-DB_USERNAME=seu-usuario
-DB_PASSWORD=sua-senha
-DB_DATABASE=seu-banco
+USERNAME=root
+PASSWORD=
+DATABASE=blog_db
+
+# Application Configuration
+PORT=3001
+NODE_ENV=development 
+
 USER_EMAIL=seu-email@gmail.com
 APP_PASSWORD=sua-senha-app-gmail
 ```
 
 3. **Execute o projeto:**
 
-### Localmente (Node.js)
+### Opção 1: Localmente (Node.js)
 ```bash
+# 1. Inicie o XAMPP e o MySQL
+# 2. Crie o banco 'blog_db' no phpMyAdmin
+# 3. Execute a aplicação
 npm install
 npm run start:dev
 ```
+**Acesse:** `http://localhost:3001/api/get`
 
-### Com Docker
+### Opção 2: Com Docker + XAMPP
 ```bash
-# Desenvolvimento com banco local
-docker-compose up app_dev mysql -d
-
-# Apenas a aplicação (usando banco externo)
-docker-compose up app -d
+# 1. Inicie o XAMPP e o MySQL  
+# 2. Crie o banco 'blog_db' no phpMyAdmin
+# 3. Execute o Docker (apenas a aplicação)
+docker-compose up app_dev -d
 ```
+**Acesse:** `http://localhost:3002/api/get`
+
+> **💡 Dica:** Use Docker se quiser isolar a aplicação, ou Node.js direto para desenvolvimento mais rápido.
 
 ## 🧪 Testes
 
@@ -58,12 +81,15 @@ npm run ci:test       # Pipeline completo
 
 ## 📊 Endpoints da API
 
+### **Local (Node.js):** `http://localhost:3001/api`
+### **Docker:** `http://localhost:3002/api`
+
 ### Posts
-- `GET /api/posts` - Listar posts (com paginação)
-- `POST /api/posts` - Criar post
-- `PUT /api/posts/:id` - Atualizar post
-- `DELETE /api/posts/:id` - Deletar post
-- `GET /api/posts/search?query=termo` - Buscar posts
+- `GET /api/get` - Listar posts (com paginação)
+- `POST /api/get` - Criar post
+- `PUT /api/get/:id` - Atualizar post
+- `DELETE /api/get/:id` - Deletar post
+- `GET /api/get/search?query=termo` - Buscar posts
 
 ### Email
 - `POST /api/sendEmail` - Enviar email de contato

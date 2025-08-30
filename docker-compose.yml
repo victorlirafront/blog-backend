@@ -7,12 +7,10 @@ services:
     container_name: blog_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${PASSWORD}
-      MYSQL_DATABASE: ${DATABASE}
-      MYSQL_USER: ${USERNAME}
-      MYSQL_PASSWORD: ${PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: ${BLOG_DATABASE}
     ports:
-      - "${DB_PORT}:3306"
+      - "${BLOG_DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -29,14 +27,14 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=production
-      - HOST=mysql
-      - DB_PORT=3306
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
-      - DATABASE=${DATABASE}
-      - USER_EMAIL=${USER_EMAIL}
-      - APP_PASSWORD=${APP_PASSWORD}
+      - BLOG_NODE_ENV=production
+      - BLOG_HOST=${BLOG_HOST}
+      - BLOG_DB_PORT=${BLOG_DB_PORT}
+      - BLOG_USERNAME=${BLOG_USERNAME}
+      - BLOG_PASSWORD=${BLOG_PASSWORD}
+      - BLOG_DATABASE=${BLOG_DATABASE}
+      - BLOG_USER_EMAIL=${BLOG_USER_EMAIL}
+      - BLOG_APP_PASSWORD=${BLOG_APP_PASSWORD}
     depends_on:
       - mysql
     networks:
@@ -59,22 +57,20 @@ services:
     ports:
       - "3002:3001"
     environment:
-      - NODE_ENV=development
-      - HOST=mysql
-      - DB_PORT=3306
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
-      - DATABASE=${DATABASE}
-      - USER_EMAIL=${USER_EMAIL}
-      - APP_PASSWORD=${APP_PASSWORD}
-    depends_on:
-      - mysql
+      - BLOG_NODE_ENV=development
+      - BLOG_HOST=host.docker.internal
+      - BLOG_DB_PORT=${BLOG_DB_PORT}
+      - BLOG_USERNAME=${BLOG_USERNAME}
+      - BLOG_PASSWORD=
+      - BLOG_DATABASE=${BLOG_DATABASE}
+      - BLOG_USER_EMAIL=${BLOG_USER_EMAIL}
+      - BLOG_APP_PASSWORD=${BLOG_APP_PASSWORD}
     networks:
       - blog_network
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "npm run seed && npm run start:dev"
+    command: npm run start:dev
 
   # Seed service (optional)
   seed:
@@ -84,12 +80,12 @@ services:
       target: builder
     container_name: blog_seed
     environment:
-      - NODE_ENV=development
-      - HOST=mysql
-      - DB_PORT=3306
-      - USERNAME=${USERNAME}
-      - PASSWORD=${PASSWORD}
-      - DATABASE=${DATABASE}
+      - BLOG_NODE_ENV=development
+      - BLOG_HOST=mysql
+      - BLOG_DB_PORT=3306
+      - BLOG_USERNAME=${BLOG_USERNAME}
+      - BLOG_PASSWORD=${BLOG_PASSWORD}
+      - BLOG_DATABASE=${BLOG_DATABASE}
     depends_on:
       - mysql
     networks:

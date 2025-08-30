@@ -63,12 +63,19 @@ export class PostService {
     }
   }
 
-  async search(searchTerm: string): Promise<PostResponse[]> {
-    return this.postRepository.find({
+  async search(searchTerm: string): Promise<PaginationResponse<PostResponse>> {
+    const posts = await this.postRepository.find({
       where: {
         title: Like(`%${searchTerm}%`),
       },
+      order: { date: 'DESC' },
     });
+
+    // Retorna todos os resultados encontrados
+    return {
+      totalPages: posts.length > 0 ? 1 : 0,
+      results: posts,
+    };
   }
 
   async findById(id: number): Promise<PostResponse> {
