@@ -63,7 +63,7 @@ npm run ci:test       # Pipeline completo
 - `POST /api/posts` - Criar post
 - `PUT /api/posts/:id` - Atualizar post
 - `DELETE /api/posts/:id` - Deletar post
-- `GET /api/posts/search?q=termo` - Buscar posts
+- `GET /api/posts/search?query=termo` - Buscar posts
 
 ### Email
 - `POST /api/sendEmail` - Enviar email de contato
