@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # MySQL Database (Production - Clever Cloud)
+  mysql:
+    image: mysql:8.0
+    container_name: blog_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - blog_network
+
+  # NestJS Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: blog_backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - USER_EMAIL=${USER_EMAIL}
+      - APP_PASSWORD=${APP_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - blog_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Development version (optional)
+  app_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: blog_backend_dev
+    restart: unless-stopped
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - USER_EMAIL=${USER_EMAIL}
+      - APP_PASSWORD=${APP_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - blog_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npm run seed && npm run start:dev"
+
+  # Seed service (optional)
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: blog_seed
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+    depends_on:
+      - mysql
+    networks:
+      - blog_network
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run seed
+
+volumes:
+  mysql_data:
+
+networks:
+  blog_network:
+    driver: bridge 
