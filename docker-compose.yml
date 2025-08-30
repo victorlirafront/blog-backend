@@ -3,14 +3,14 @@ version: '3.8'
 services:
   # MySQL Database (Production - Clever Cloud)
   mysql:
-    image: mysql:8.0
-    container_name: blog_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      MYSQL_DATABASE: ${BLOG_DATABASE}
+    image: mysql:8.0 
+    container_name: blog_mysql 
+    restart: unless-stopped 
+    environment: 
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes 
+      MYSQL_DATABASE: ${BLOG_DATABASE} 
     ports:
-      - "${BLOG_DB_PORT}:3306"
+      - "${BLOG_DB_PORT}:3306" 
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -23,17 +23,17 @@ services:
       dockerfile: Dockerfile
       target: production
     container_name: blog_backend
-    restart: unless-stopped
+    restart: unless-stopped 
     ports:
-      - "3001:3001"
+      - "3001:3001" 
     environment:
-      - BLOG_NODE_ENV=production
+      - BLOG_NODE_ENV=production 
       - BLOG_HOST=${BLOG_HOST}
-      - BLOG_DB_PORT=${BLOG_DB_PORT}
-      - BLOG_USERNAME=${BLOG_USERNAME}
+      - BLOG_DB_PORT=${BLOG_DB_PORT} 
+      - BLOG_USERNAME=${BLOG_USERNAME} 
       - BLOG_PASSWORD=${BLOG_PASSWORD}
-      - BLOG_DATABASE=${BLOG_DATABASE}
-      - BLOG_USER_EMAIL=${BLOG_USER_EMAIL}
+      - BLOG_DATABASE=${BLOG_DATABASE} 
+      - BLOG_USER_EMAIL=${BLOG_USER_EMAIL} 
       - BLOG_APP_PASSWORD=${BLOG_APP_PASSWORD}
     depends_on:
       - mysql
