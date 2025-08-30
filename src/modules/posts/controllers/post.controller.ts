@@ -50,14 +50,16 @@ export class PostController {
   }
 
   @Get('author/:author')
-  async findByAuthor(@Param('author') author: string): Promise<PostResponse[]> {
+  async findByAuthor(
+    @Param('author') author: string,
+  ): Promise<PaginationResponse<PostResponse>> {
     return this.postService.findByAuthor(author);
   }
 
   @Get('category/:category')
   async findByCategory(
     @Param('category') category: string,
-  ): Promise<PostResponse[]> {
+  ): Promise<PaginationResponse<PostResponse>> {
     return this.postService.findByCategory(category);
   }
 

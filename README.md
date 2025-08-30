@@ -71,6 +71,51 @@ docker-compose up app_dev -d
 
 > **💡 Dica:** Use Docker se quiser isolar a aplicação, ou Node.js direto para desenvolvimento mais rápido.
 
+## 🔄 Desenvolvimento com Docker
+
+### **🚀 Hot Reload (Automático)**
+O Docker está configurado com reload automático. Para a maioria das alterações, apenas:
+1. **Salve o arquivo**
+2. **Aguarde 5-10 segundos**
+3. **Teste a alteração**
+
+### **✅ Mudanças automáticas:**
+- Alterações em controllers, services, DTOs
+- Novos métodos/endpoints
+- Correções de bugs
+- Mudanças na lógica de negócio
+
+### **🔧 Quando reiniciar:**
+
+#### **Alterações no .env:**
+```bash
+docker-compose restart app_dev
+```
+
+#### **Novas dependências (package.json):**
+```bash
+docker-compose build app_dev
+docker-compose up app_dev -d
+```
+
+#### **Alterações no Dockerfile:**
+```bash
+docker-compose build app_dev
+docker-compose up app_dev -d
+```
+
+#### **Problemas/travamentos:**
+```bash
+docker-compose restart app_dev
+```
+
+### **🔍 Monitorar logs em tempo real:**
+```bash
+docker-compose logs app_dev -f
+```
+
+> **💡 Dica:** Se aparecer `File change detected. Starting incremental compilation...` significa que a mudança foi detectada automaticamente!
+
 ## 🧪 Testes
 
 ```bash
