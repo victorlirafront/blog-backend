@@ -33,8 +33,6 @@ services:
       - BLOG_USERNAME=${BLOG_USERNAME} 
       - BLOG_PASSWORD=${BLOG_PASSWORD}
       - BLOG_DATABASE=${BLOG_DATABASE} 
-      - USER_EMAIL=${USER_EMAIL} 
-      - APP_PASSWORD=${APP_PASSWORD}
       - RESEND_API_KEY=${RESEND_API_KEY}
     depends_on:
       - mysql
@@ -86,8 +84,6 @@ services:
       - BLOG_USERNAME=${BLOG_USERNAME}
       - BLOG_DB_PASSWORD=${BLOG_PASSWORD}
       - BLOG_DATABASE=${BLOG_DATABASE}
-      - USER_EMAIL=${USER_EMAIL} 
-      - APP_PASSWORD=${APP_PASSWORD}
     depends_on:
       - mysql
     networks:
