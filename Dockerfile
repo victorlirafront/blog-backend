@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
+# Install dependencies
 RUN npm ci
 
 # Copy source code
@@ -27,7 +27,7 @@ RUN adduser -S nestjs -u 1001
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies (skip prepare script)
+# Install only production dependencies
 RUN npm ci --only=production --ignore-scripts && npm cache clean --force
 
 # Copy built application from builder stage
