@@ -7,23 +7,15 @@ export class EmailService {
   private transporter;
 
   constructor() {
-    // Logs detalhados para debug das variáveis de ambiente
-    console.log('=== EMAIL SERVICE DEBUG ===');
-    console.log('BLOG_USER_EMAIL:', process.env.BLOG_USER_EMAIL);
-    console.log('BLOG_APP_PASSWORD:', process.env.BLOG_APP_PASSWORD ? '***SET***' : 'NOT SET');
-    console.log('BLOG_NODE_ENV:', process.env.BLOG_NODE_ENV);
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    console.log('All env vars:', Object.keys(process.env).filter(key => key.includes('BLOG')));
-    console.log('==========================');
 
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 465, // Mudando para porta 465 (SSL)
-      secure: true, // SSL
+      port: 587,
+      secure: false,
       auth: {
-        user: process.env.BLOG_USER_EMAIL,
-        pass: process.env.BLOG_APP_PASSWORD,
+        user: "victorliracorporativo@gmail.com",
+        pass: "paqj rxjh vaqt egnt",
       },
       // Configurações para evitar timeout
       connectionTimeout: 60000,
@@ -38,7 +30,7 @@ export class EmailService {
     const mailOptions = {
       from: {
         name,
-        address: process.env.BLOG_USER_EMAIL,
+        address: "victorliracorporativo@gmail.com",
       },
       to: ['victorliracorporativo@gmail.com'],
       subject: `${subject} ✔`,
