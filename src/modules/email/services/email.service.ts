@@ -7,20 +7,15 @@ export class EmailService {
   private transporter;
 
   constructor() {
-
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 587,
       secure: false,
       auth: {
-        user: "victorliradev@gmail.com",
-        pass: "rima mwrb fmni xqfa",
+        user: process.env.USER_EMAIL,
+        pass: process.env.APP_PASSWORD,
       },
-      // Configurações para evitar timeout
-      connectionTimeout: 60000,
-      greetingTimeout: 30000,
-      socketTimeout: 60000,
     });
   }
 
@@ -30,9 +25,9 @@ export class EmailService {
     const mailOptions = {
       from: {
         name,
-        address: "victorliradev@gmail.com",
+        address: process.env.USER_EMAIL,
       },
-      to: ['victorliradev@gmail.com'],
+      to: ['victorliracorporativo@gmail.com'],
       subject: `${subject} ✔`,
       text: 'Hello world?',
       html: `
@@ -44,9 +39,9 @@ export class EmailService {
 
     try {
       await this.transporter.sendMail(mailOptions);
-      console.log('Email has been sent successfully');
+      console.log('Email has been sent');
     } catch (error) {
-      console.error('Email sending error:', error);
+      console.error(error);
       throw new InternalServerErrorException('Erro ao enviar o email');
     }
   }
