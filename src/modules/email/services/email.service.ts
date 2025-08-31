@@ -7,11 +7,14 @@ export class EmailService {
   private transporter;
 
   constructor() {
-    console.log('Email Service - BLOG_USER_EMAIL:', process.env.BLOG_USER_EMAIL);
-    console.log(
-      'Email Service - BLOG_APP_PASSWORD:',
-      process.env.BLOG_APP_PASSWORD ? '***' : 'NOT SET',
-    );
+    // Logs detalhados para debug das variáveis de ambiente
+    console.log('=== EMAIL SERVICE DEBUG ===');
+    console.log('BLOG_USER_EMAIL:', process.env.BLOG_USER_EMAIL);
+    console.log('BLOG_APP_PASSWORD:', process.env.BLOG_APP_PASSWORD ? '***SET***' : 'NOT SET');
+    console.log('BLOG_NODE_ENV:', process.env.BLOG_NODE_ENV);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('All env vars:', Object.keys(process.env).filter(key => key.includes('BLOG')));
+    console.log('==========================');
 
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
