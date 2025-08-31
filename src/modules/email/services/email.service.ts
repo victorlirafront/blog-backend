@@ -7,6 +7,11 @@ export class EmailService {
   private transporter;
 
   constructor() {
+    console.log('=== DEBUG ===');
+    console.log('USER_EMAIL:', process.env.USER_EMAIL);
+    console.log('APP_PASSWORD:', process.env.APP_PASSWORD);
+    console.log('=============');
+
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
