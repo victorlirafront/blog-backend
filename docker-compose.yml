@@ -63,6 +63,7 @@ services:
       - BLOG_USERNAME=${BLOG_USERNAME}
       - BLOG_PASSWORD=
       - BLOG_DATABASE=${BLOG_DATABASE}
+      - RESEND_API_KEY=${RESEND_API_KEY}
     networks:
       - blog_network
     volumes:

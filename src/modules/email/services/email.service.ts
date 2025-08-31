@@ -1,54 +1,36 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { SendEmailDto } from '../dto/send-email.dto';
 
 @Injectable()
 export class EmailService {
-  private transporter;
+  private resend;
 
   constructor() {
     console.log('=== DEBUG ===');
-    console.log('USER_EMAIL:', process.env.USER_EMAIL);
-    console.log('APP_PASSWORD:', process.env.APP_PASSWORD);
+    console.log('RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'SET' : 'NOT SET');
     console.log('=============');
 
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.APP_PASSWORD,
-      },
-    });
+    this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   async sendEmail(data: SendEmailDto): Promise<void> {
     const { name, email, cellphone, subject, message } = data;
 
-    const mailOptions = {
-      from: {
-        name,
-        address: process.env.USER_EMAIL,
-      },
-      to: ['victorliracorporativo@gmail.com'],
-      subject: `${subject} ✔`,
-      text: 'Hello world?',
-      html: `
-        <p> celular: ${cellphone} </p>
-        <p> email: ${email} </p>
-        <p> mensagem: ${message} </p>
-      `,
-    };
-
     try {
-      await this.transporter.sendMail(mailOptions);
+      await this.resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: 'victorliradev@gmail.com',
+        subject: `${subject} ✔`,
+        html: `
+          <p> celular: ${cellphone} </p>
+          <p> email: ${email} </p>
+          <p> mensagem: ${message} </p>
+        `,
+      });
       console.log('Email has been sent');
     } catch (error) {
       console.error('EMAIL ERROR:', error);
-      console.error('Error code:', error.code);
-      console.error('Error message:', error.message);
       throw new InternalServerErrorException('Erro ao enviar o email');
     }
   }
