@@ -19,12 +19,16 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
+      port: 465, // Mudando para porta 465 (SSL)
+      secure: true, // SSL
       auth: {
         user: process.env.BLOG_USER_EMAIL,
         pass: process.env.BLOG_APP_PASSWORD,
       },
+      // Configurações para evitar timeout
+      connectionTimeout: 60000,
+      greetingTimeout: 30000,
+      socketTimeout: 60000,
     });
   }
 
