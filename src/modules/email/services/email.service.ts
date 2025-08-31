@@ -41,7 +41,9 @@ export class EmailService {
       await this.transporter.sendMail(mailOptions);
       console.log('Email has been sent');
     } catch (error) {
-      console.error(error);
+      console.error('EMAIL ERROR:', error);
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
       throw new InternalServerErrorException('Erro ao enviar o email');
     }
   }
