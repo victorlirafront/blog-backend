@@ -88,7 +88,9 @@ export class PostService {
     return post;
   }
 
-  async findByAuthor(author: string): Promise<PaginationResponse<PostResponse>> {
+  async findByAuthor(
+    author: string,
+  ): Promise<PaginationResponse<PostResponse>> {
     const posts = await this.postRepository.find({
       where: { author },
       order: { date: 'DESC' },
@@ -101,7 +103,9 @@ export class PostService {
     };
   }
 
-  async findByCategory(category: string): Promise<PaginationResponse<PostResponse>> {
+  async findByCategory(
+    category: string,
+  ): Promise<PaginationResponse<PostResponse>> {
     const posts = await this.postRepository.find({
       where: { category },
       order: { date: 'DESC' },

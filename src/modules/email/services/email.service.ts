@@ -19,6 +19,7 @@ export class EmailService {
         to: 'victorliradev@gmail.com',
         subject: `${subject} ✔`,
         html: `
+          <p> nome: ${name} </p>
           <p> celular: ${cellphone} </p>
           <p> email: ${email} </p>
           <p> mensagem: ${message} </p>
