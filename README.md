@@ -1,64 +1,148 @@
+# Blog Backend
 
-<p align="center">
-  <a href="https://nestjs.com/" target="_blank">
-    <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo"  />
-  </a>
-</p>
-
-<h1 align="center">Blog Posts API</h1>
-
-<p align="center">
-  Projeto desenvolvido com <a href="https://nestjs.com/" target="_blank">NestJS</a> para gerenciamento de posts em um blog.
-</p>
-
----
+Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e envio de emails.
 
 ## 🚀 Tecnologias
 
-* [Node.js](https://nodejs.org/)
-* [NestJS](https://nestjs.com/)
-* [TypeORM](https://typeorm.io/)
-* [MySQL](https://www.mysql.com/)
+- **NestJS** - Framework Node.js
+- **TypeORM** - ORM para banco de dados
+- **MySQL** - Banco de dados
+- **Nodemailer** - Envio de emails
+- **Railway** - Deploy e hosting
+- **Jest** - Testes unitários
 
----
+## 📋 Requisitos
 
-## ⚙️ Instalação
+### **Para desenvolvimento local:**
+- **Node.js** 18+ 
+- **XAMPP** (MySQL)
+- **Git**
 
+### **Para Docker:**
+- **Docker** e **Docker Compose**
+- **XAMPP** (MySQL)
+
+## 🛠️ Instalação Local
+
+1. **Clone o repositório:**
 ```bash
+git clone <url-do-repositorio>
+cd blog-backend
+```
+
+2. **Configure as variáveis de ambiente:**
+Crie um arquivo `.env` na raiz do projeto:
+```env
+# development
+HOST=localhost
+DB_PORT=3306
+USERNAME=root
+PASSWORD=
+DATABASE=blog_db
+
+# Application Configuration
+PORT=3001
+NODE_ENV=development 
+
+USER_EMAIL=seu-email@gmail.com
+APP_PASSWORD=sua-senha-app-gmail
+```
+
+3. **Execute o projeto:**
+
+### Opção 1: Localmente (Node.js)
+```bash
+# 1. Inicie o XAMPP e o MySQL
+# 2. Crie o banco 'blog_db' no phpMyAdmin
+# 3. Execute a aplicação
 npm install
-```
-
----
-
-## 🛠️ Configuração do Banco de Dados
-
-1. Instale e abra o **XAMPP** para iniciar o MySQL.
-2. Crie um banco de dados com o nome:
-
-```
-blog_db
-```
-
-> Ou utilize o nome definido na variável `DB_NAME` do arquivo `.env`.
-
-3. Verifique se os dados de conexão estão corretos no arquivo `.env`.
-
----
-
-## ▶️ Executar o Projeto
-
-```bash
 npm run start:dev
 ```
+**Acesse:** `http://localhost:3001/api/get`
 
-Após iniciar o servidor, o NestJS criará automaticamente as tabelas no banco de dados.
-
----
-
-## 🌱 Popular o Banco de Dados
-
+### Opção 2: Com Docker + XAMPP
 ```bash
-npm run seed
+# 1. Inicie o XAMPP e o MySQL  
+# 2. Crie o banco 'blog_db' no phpMyAdmin
+# 3. Execute o Docker (apenas a aplicação)
+docker-compose up app_dev -d
+```
+**Acesse:** `http://localhost:3002/api/get`
+
+> **💡 Dica:** Use Docker se quiser isolar a aplicação, ou Node.js direto para desenvolvimento mais rápido.
+
+## 🔄 Desenvolvimento com Docker
+
+### **🚀 Hot Reload (Automático)**
+O Docker está configurado com reload automático. Para a maioria das alterações, apenas:
+1. **Salve o arquivo**
+2. **Aguarde 5-10 segundos**
+3. **Teste a alteração**
+
+### **✅ Mudanças automáticas:**
+- Alterações em controllers, services, DTOs
+- Novos métodos/endpoints
+- Correções de bugs
+- Mudanças na lógica de negócio
+
+### **🔧 Quando reiniciar:**
+
+#### **Alterações no .env:**
+```bash
+docker-compose restart app_dev
 ```
 
-Esse comando irá inserir dados fictícios (mock) nas tabelas criadas.
+#### **Novas dependências (package.json):**
+```bash
+docker-compose build app_dev
+docker-compose up app_dev -d
+```
+
+#### **Alterações no Dockerfile:**
+```bash
+docker-compose build app_dev
+docker-compose up app_dev -d
+```
+
+#### **Problemas/travamentos:**
+```bash
+docker-compose restart app_dev
+```
+
+### **🔍 Monitorar logs em tempo real:**
+```bash
+docker-compose logs app_dev -f
+```
+
+> **💡 Dica:** Se aparecer `File change detected. Starting incremental compilation...` significa que a mudança foi detectada automaticamente!
+
+## 🧪 Testes
+
+```bash
+npm test              # Executar testes
+npm run test:cov      # Testes com coverage
+npm run ci:test       # Pipeline completo
+```
+
+## 📊 Endpoints da API
+
+### **Local (Node.js):** `http://localhost:3001/api`
+### **Docker:** `http://localhost:3002/api`
+
+### Posts
+- `GET /api/get` - Listar posts (com paginação)
+- `POST /api/get` - Criar post
+- `PUT /api/get/:id` - Atualizar post
+- `DELETE /api/get/:id` - Deletar post
+- `GET /api/get/search?query=termo` - Buscar posts
+
+### Email
+- `POST /api/sendEmail` - Enviar email de contato
+
+
+## 📝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Abra um Pull Request

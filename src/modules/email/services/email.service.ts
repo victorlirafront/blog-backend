@@ -7,10 +7,10 @@ export class EmailService {
   private transporter;
 
   constructor() {
-    console.log('Email Service - USER_EMAIL:', process.env.USER_EMAIL);
+    console.log('Email Service - BLOG_USER_EMAIL:', process.env.BLOG_USER_EMAIL);
     console.log(
-      'Email Service - APP_PASSWORD:',
-      process.env.APP_PASSWORD ? '***' : 'NOT SET',
+      'Email Service - BLOG_APP_PASSWORD:',
+      process.env.BLOG_APP_PASSWORD ? '***' : 'NOT SET',
     );
 
     this.transporter = nodemailer.createTransport({
@@ -19,8 +19,8 @@ export class EmailService {
       port: 587,
       secure: false,
       auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.APP_PASSWORD,
+        user: process.env.BLOG_USER_EMAIL,
+        pass: process.env.BLOG_APP_PASSWORD,
       },
     });
   }
@@ -31,7 +31,7 @@ export class EmailService {
     const mailOptions = {
       from: {
         name,
-        address: process.env.USER_EMAIL,
+        address: process.env.BLOG_USER_EMAIL,
       },
       to: ['victorliracorporativo@gmail.com'],
       subject: `${subject} ✔`,

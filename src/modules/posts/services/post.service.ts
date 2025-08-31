@@ -63,12 +63,19 @@ export class PostService {
     }
   }
 
-  async search(searchTerm: string): Promise<PostResponse[]> {
-    return this.postRepository.find({
+  async search(searchTerm: string): Promise<PaginationResponse<PostResponse>> {
+    const posts = await this.postRepository.find({
       where: {
         title: Like(`%${searchTerm}%`),
       },
+      order: { date: 'DESC' },
     });
+
+    // Retorna todos os resultados encontrados
+    return {
+      totalPages: posts.length > 0 ? 1 : 0,
+      results: posts,
+    };
   }
 
   async findById(id: number): Promise<PostResponse> {
@@ -81,11 +88,29 @@ export class PostService {
     return post;
   }
 
-  async findByAuthor(author: string): Promise<PostResponse[]> {
-    return this.postRepository.find({ where: { author } });
+  async findByAuthor(author: string): Promise<PaginationResponse<PostResponse>> {
+    const posts = await this.postRepository.find({
+      where: { author },
+      order: { date: 'DESC' },
+    });
+
+    // Retorna todos os resultados encontrados do autor
+    return {
+      totalPages: posts.length > 0 ? 1 : 0,
+      results: posts,
+    };
   }
 
-  async findByCategory(category: string): Promise<PostResponse[]> {
-    return this.postRepository.find({ where: { category } });
+  async findByCategory(category: string): Promise<PaginationResponse<PostResponse>> {
+    const posts = await this.postRepository.find({
+      where: { category },
+      order: { date: 'DESC' },
+    });
+
+    // Retorna todos os resultados encontrados na categoria
+    return {
+      totalPages: posts.length > 0 ? 1 : 0,
+      results: posts,
+    };
   }
 }
