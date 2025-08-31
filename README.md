@@ -1,7 +1,9 @@
+<br/>
+<br/>
+<br/>
+
 <p align="center">
-  <a href="https://nestjs.com/" target="_blank">
-    <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
-  </a>
+  <img width="400" src="https://skillicons.dev/icons?i=typescript,nodejs,nestjs,mysql,docker&theme=dark" alt="Java, Spring, Kotlin, GO, Postgres, MySql, MongoDB, Redis, NodeJs, Express, React, NextJs, TailwindCSS">
 </p>
 
 # Blog Backend
