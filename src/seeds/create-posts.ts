@@ -17,7 +17,7 @@ const dataSource = new DataSource({
 
 async function seed() {
   if (
-    process.env.BLOG_NODE_ENV === 'production' ||
+    process.env.NODE_ENV === 'production' ||
     process.env.BLOG_HOST?.includes('clever-cloud')
   ) {
     console.error('🚫 Seed command is disabled in production environment.');

@@ -27,7 +27,7 @@ services:
     ports:
       - "3001:3001" 
     environment:
-      - BLOG_NODE_ENV=production 
+      - NODE_ENV=production 
       - BLOG_HOST=${BLOG_HOST}
       - BLOG_DB_PORT=${BLOG_DB_PORT} 
       - BLOG_USERNAME=${BLOG_USERNAME} 
@@ -57,7 +57,7 @@ services:
     ports:
       - "3002:3001"
     environment:
-      - BLOG_NODE_ENV=development
+      - NODE_ENV=development
       - BLOG_HOST=host.docker.internal
       - BLOG_DB_PORT=${BLOG_DB_PORT}
       - BLOG_USERNAME=${BLOG_USERNAME}
@@ -78,7 +78,7 @@ services:
       target: builder
     container_name: blog_seed
     environment:
-      - BLOG_NODE_ENV=development
+      - NODE_ENV=development
       - BLOG_HOST=mysql
       - BLOG_DB_PORT=3306
       - BLOG_USERNAME=${BLOG_USERNAME}
