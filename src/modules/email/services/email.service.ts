@@ -14,8 +14,8 @@ export class EmailService {
       port: 587,
       secure: false,
       auth: {
-        user: "victorliracorporativo@gmail.com",
-        pass: "paqj rxjh vaqt egnt",
+        user: "victorliradev@gmail.com",
+        pass: "rima mwrb fmni xqfa",
       },
       // Configurações para evitar timeout
       connectionTimeout: 60000,
@@ -30,9 +30,9 @@ export class EmailService {
     const mailOptions = {
       from: {
         name,
-        address: "victorliracorporativo@gmail.com",
+        address: "victorliradev@gmail.com",
       },
-      to: ['victorliracorporativo@gmail.com'],
+      to: ['victorliradev@gmail.com'],
       subject: `${subject} ✔`,
       text: 'Hello world?',
       html: `
