@@ -21,7 +21,7 @@
     "seed": "ts-node src/seeds/create-posts.ts",
     "ci:test": "npm run lint && npm test && npm run test:cov && npm run build",
     "ci:full": "npm ci && npm run lint && npm test && npm run test:cov && npm run build",
-    "prepare": "husky"
+    "prepare": "if [ -d \".git\" ]; then husky; fi"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
