@@ -6,7 +6,7 @@
   <img width="400" src="https://skillicons.dev/icons?i=typescript,nodejs,nestjs,mysql,docker&theme=dark" alt="Java, Spring, Kotlin, GO, Postgres, MySql, MongoDB, Redis, NodeJs, Express, React, NextJs, TailwindCSS">
 </p>
 
-# Blog Backend
+# Blog Backend 
 
 Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e envio de emails.
 
