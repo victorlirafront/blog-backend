@@ -20,6 +20,9 @@ export class PostModel {
   @Column({ type: 'varchar', length: 100 })
   author: string;
 
+  @Column({ type: 'varchar', length: 255, unique: true })
+  slug: string;
+
   @CreateDateColumn()
   date: Date;
 

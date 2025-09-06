@@ -38,6 +38,7 @@ async function seed() {
       post_image: 'image1.jpg',
       post_background: 'bg1.jpg',
       keywords: 'javascript, java',
+      slug: 'post-1',
     },
     {
       title: 'Post 2',
@@ -50,6 +51,7 @@ async function seed() {
       post_image: 'image2.jpg',
       post_background: 'bg2.jpg',
       keywords: 'javascript, java',
+      slug: 'post-2',
     },
     {
       title: 'Post 3',
@@ -62,6 +64,7 @@ async function seed() {
       post_image: 'image3.jpg',
       post_background: 'bg3.jpg',
       keywords: 'javascript, java',
+      slug: 'post-3',
     },
   ];
 

@@ -117,4 +117,19 @@ export class PostService {
       results: posts,
     };
   }
+
+  async findBySlug(slug: string): Promise<PostResponse> {
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.slug = :slug', { slug })
+      .getOne();
+
+    if (!post) {
+      throw new NotFoundException(
+        `Post com slug "${slug}" não foi encontrado.`,
+      );
+    }
+
+    return post;
+  }
 }

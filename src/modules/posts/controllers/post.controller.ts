@@ -63,6 +63,11 @@ export class PostController {
     return this.postService.findByCategory(category);
   }
 
+  @Get('slug/:slug')
+  async findBySlug(@Param('slug') slug: string): Promise<PostResponse> {
+    return this.postService.findBySlug(slug);
+  }
+
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<PostResponse> {
     return this.postService.findById(id);
