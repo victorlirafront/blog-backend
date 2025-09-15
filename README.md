@@ -52,8 +52,6 @@ DATABASE=blog_db
 PORT=3001
 NODE_ENV=development 
 
-USER_EMAIL=seu-email@gmail.com
-APP_PASSWORD=sua-senha-app-gmail
 ```
 
 3. **Execute o projeto:**
