@@ -8,7 +8,7 @@
 
 # Blog Backend 
 
-Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e envio de emails. 
+Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e envio de emails.  
 
 ## 🚀 Tecnologias
 
