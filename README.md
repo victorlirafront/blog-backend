@@ -1,3 +1,7 @@
+<p align="start"> 
+  <img width="400" src="https://skillicons.dev/icons?i=typescript,nodejs,nestjs,mysql,docker,redis&theme=dark" alt="">
+</p>
+
 # 🐳 Guia Docker - MySQL + NestJS
 
 ## 📋 Pré-requisitos
