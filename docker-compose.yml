@@ -13,7 +13,6 @@ services:
       - "${BLOG_DB_PORT}:3306" 
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
     networks:
       - blog_network
 
@@ -58,9 +57,9 @@ services:
       - "3002:3001"
     environment:
       - NODE_ENV=development
-      - BLOG_HOST=mysql
-      - BLOG_DB_PORT=3306
-      - BLOG_USERNAME=root
+      - BLOG_HOST=host.docker.internal
+      - BLOG_DB_PORT=${BLOG_DB_PORT}
+      - BLOG_USERNAME=${BLOG_USERNAME}
       - BLOG_PASSWORD=
       - BLOG_DATABASE=${BLOG_DATABASE}
       - RESEND_API_KEY=${RESEND_API_KEY}
@@ -73,7 +72,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/dist
     command: npm run start:dev
 
   # Seed service (optional)
