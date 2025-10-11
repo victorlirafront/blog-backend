@@ -11,10 +11,9 @@
 
 ```bash
 # Subir tudo (MySQL + Backend Dev)
-docker-compose up mysql app_dev -d
-
+docker-compose up mysql redis app_dev -d
 # Depois de rodar o comando acima, rode: ( Obrigatório )
-docker-compose logs app_dev --tail=20
+docker-compose logs app_dev --tail=30
 
 # Ver logs em tempo real
 docker-compose logs -f
@@ -46,22 +45,6 @@ User: root
 Password: (vazia)
 Database: blog_db
 ```
-
-<<<<<<< Updated upstream
-
-## 📊 Estrutura
-
-```
-docker/
-├── mysql/
-│   └── init/
-│       └── 01-init.sql    # Scripts de inicialização
-└── README-DOCKER.md        # Este arquivo
-```
-
-=======
-
-> > > > > > > Stashed changes
 
 ## 🔧 Comandos Úteis
 
