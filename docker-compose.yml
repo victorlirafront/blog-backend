@@ -63,6 +63,10 @@ services:
       - BLOG_PASSWORD=
       - BLOG_DATABASE=${BLOG_DATABASE}
       - RESEND_API_KEY=${RESEND_API_KEY}
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - mysql
     networks:
       - blog_network
     volumes:
