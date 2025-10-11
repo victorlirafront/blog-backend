@@ -17,7 +17,7 @@
 # Subir tudo (MySQL + Backend Dev)
 docker-compose up mysql redis app_dev -d
 # Depois de rodar o comando acima, rode: ( Obrigatório )
-
+docker-compose logs app_dev --tail=30
 
 # Ver logs em tempo real
 docker-compose logs -f
