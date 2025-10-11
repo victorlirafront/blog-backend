@@ -47,6 +47,8 @@ Password: (vazia)
 Database: blog_db
 ```
 
+<<<<<<< Updated upstream
+
 ## 📊 Estrutura
 
 ```
@@ -56,6 +58,10 @@ docker/
 │       └── 01-init.sql    # Scripts de inicialização
 └── README-DOCKER.md        # Este arquivo
 ```
+
+=======
+
+> > > > > > > Stashed changes
 
 ## 🔧 Comandos Úteis
 
