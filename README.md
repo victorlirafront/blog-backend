@@ -1,154 +1,142 @@
-<br/>
-<br/>
-<br/>
+# 🐳 Guia Docker - MySQL + NestJS
 
-<p align="center"> 
-  <img width="400" src="https://skillicons.dev/icons?i=typescript,nodejs,nestjs,mysql,docker&theme=dark" alt="Java, Spring, Kotlin, GO, Postgres, MySql, MongoDB, Redis, NodeJs, Express, React, NextJs, TailwindCSS">
-</p>
+## 📋 Pré-requisitos
 
-# Blog Backend 
+- Docker
+- Docker Compose
 
-Blog desenvolvido com Clean Architecture e NestJS, incluindo sistema de posts e envio de emails.  
+## 🚀 Como rodar tudo no Docker (MySQL + Backend)
 
-## 🚀 Tecnologias
+### 1. **Subir MySQL + Backend juntos:**
 
-- **NestJS** - Framework Node.js
-- **TypeORM** - ORM para banco de dados
-- **MySQL** - Banco de dados
-- **Nodemailer** - Envio de emails
-- **Railway** - Deploy e hosting
-- **Jest** - Testes unitários
-
-## 📋 Requisitos
-
-### **Para desenvolvimento local:**
-- **Node.js** 18+ 
-- **XAMPP** (MySQL)
-- **Git**
-
-### **Para Docker:**
-- **Docker** e **Docker Compose**
-- **XAMPP** (MySQL)
-
-## 🛠️ Instalação Local
-
-1. **Clone o repositório:**
 ```bash
-git clone <url-do-repositorio>
-cd blog-backend
-```
+# Subir tudo (MySQL + Backend Dev)
+docker-compose up mysql app_dev -d
 
-2. **Configure as variáveis de ambiente:**
-Crie um arquivo `.env` na raiz do projeto:
-```env
-# development
-HOST=localhost
-DB_PORT=3306
-USERNAME=root
-PASSWORD=
-DATABASE=blog_db
+# Depois de rodar o comando acima, rode: ( Obrigatório )
+docker-compose logs app_dev --tail=20
 
-# Application Configuration
-PORT=3001
-NODE_ENV=development 
+# Ver logs em tempo real
+docker-compose logs -f
 
-```
-
-3. **Execute o projeto:**
-
-### Opção 1: Localmente (Node.js)
-```bash
-# 1. Inicie o XAMPP e o MySQL
-# 2. Crie o banco 'blog_db' no phpMyAdmin
-# 3. Execute a aplicação
-npm install
-npm run start:dev
-```
-**Acesse:** `http://localhost:3001/api/get`
-
-### Opção 2: Com Docker + XAMPP
-```bash
-# 1. Inicie o XAMPP e o MySQL  
-# 2. Crie o banco 'blog_db' no phpMyAdmin
-# 3. Execute o Docker (apenas a aplicação)
-docker-compose up app_dev -d
-```
-**Acesse:** `http://localhost:3002/api/get`
-
-> **💡 Dica:** Use Docker se quiser isolar a aplicação, ou Node.js direto para desenvolvimento mais rápido.
-
-## 🔄 Desenvolvimento com Docker
-
-### **🚀 Hot Reload (Automático)**
-O Docker está configurado com reload automático. Para a maioria das alterações, apenas:
-1. **Salve o arquivo**
-2. **Aguarde 5-10 segundos**
-3. **Teste a alteração**
-
-### **✅ Mudanças automáticas:**
-- Alterações em controllers, services, DTOs
-- Novos métodos/endpoints
-- Correções de bugs
-- Mudanças na lógica de negócio
-
-### **🔧 Quando reiniciar:**
-
-#### **Alterações no .env:**
-```bash
-docker-compose restart app_dev
-```
-
-#### **Novas dependências (package.json):**
-```bash
-docker-compose build app_dev
-docker-compose up app_dev -d
-```
-
-#### **Alterações no Dockerfile:**
-```bash
-docker-compose build app_dev
-docker-compose up app_dev -d
-```
-
-#### **Problemas/travamentos:**
-```bash
-docker-compose restart app_dev
-```
-
-### **🔍 Monitorar logs em tempo real:**
-```bash
+# Ver apenas logs do backend
 docker-compose logs app_dev -f
 ```
 
-> **💡 Dica:** Se aparecer `File change detected. Starting incremental compilation...` significa que a mudança foi detectada automaticamente!
-
-## 🧪 Testes
+### 2. **Apenas MySQL (para desenvolvimento local):**
 
 ```bash
-npm test              # Executar testes
-npm run test:cov      # Testes com coverage
-npm run ci:test       # Pipeline completo
+# Apenas o banco de dados
+docker-compose up mysql -d
+
+# Backend rodando localmente (fora do Docker)
+npm run start:dev
 ```
 
-## 📊 Endpoints da API
+### 3. **Conectar ao MySQL:**
 
-### **Local (Node.js):** `http://localhost:3001/api`
-### **Docker:** `http://localhost:3002/api`
+```bash
+# Via terminal
+docker exec -it blog_mysql mysql -u root blog_db
 
-### Posts
-- `GET /api/get` - Listar posts (com paginação)
-- `POST /api/get` - Criar post
-- `PUT /api/get/:id` - Atualizar post
-- `DELETE /api/get/:id` - Deletar post
-- `GET /api/get/search?query=termo` - Buscar posts
+# Via cliente MySQL (DBeaver, MySQL Workbench, etc)
+Host: localhost
+Port: 3306
+User: root
+Password: (vazia)
+Database: blog_db
+```
 
-### Email
-- `POST /api/sendEmail` - Enviar email de contato
+## 📊 Estrutura
 
+```
+docker/
+├── mysql/
+│   └── init/
+│       └── 01-init.sql    # Scripts de inicialização
+└── README-DOCKER.md        # Este arquivo
+```
 
-## 📝 Contribuição
+## 🔧 Comandos Úteis
 
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Abra um Pull Request
+```bash
+# Parar tudo
+docker-compose down
+
+# Parar e remover volumes (CUIDADO: apaga os dados do banco!)
+docker-compose down -v
+
+# Rebuild após mudanças no Dockerfile
+docker-compose build app_dev
+
+# Ver logs do MySQL
+docker-compose logs mysql -f
+
+# Ver logs do Backend
+docker-compose logs app_dev -f
+
+# Ver status dos containers
+docker-compose ps
+
+# Executar seed (popular banco)
+docker-compose run --rm seed
+
+# Backup do banco
+docker exec blog_mysql mysqldump -u root blog_db > backup.sql
+
+# Restaurar banco
+docker exec -i blog_mysql mysql -u root blog_db < backup.sql
+
+# Reiniciar apenas o backend
+docker-compose restart app_dev
+```
+
+## 🎯 URLs e Portas
+
+- **Backend API**: http://localhost:3002/api
+- **MySQL**: localhost:3306
+- **Posts**: http://localhost:3002/api/get
+- **Busca por slug**: http://localhost:3002/api/get/slug/:slug
+
+## 📝 Variáveis de Ambiente
+
+O arquivo `.env` **não é necessário** quando usando tudo no Docker, pois as configurações padrão já funcionam:
+
+```env
+# Valores padrão (já configurados no docker-compose.yml)
+BLOG_HOST=mysql
+BLOG_DB_PORT=3306
+BLOG_USERNAME=root
+BLOG_PASSWORD=
+BLOG_DATABASE=blog_db
+NODE_ENV=development
+RESEND_API_KEY=
+```
+
+Se precisar customizar, crie um arquivo `.env` na raiz do projeto.
+
+## 🔍 Troubleshooting
+
+### MySQL não inicia:
+
+```bash
+# Ver logs
+docker-compose logs mysql
+
+# Remover volume e recriar
+docker-compose down -v
+docker-compose up mysql -d
+```
+
+### Backend não conecta no MySQL:
+
+1. Verifique se o MySQL está healthy: `docker-compose ps`
+2. Verifique as variáveis de ambiente: `docker-compose config`
+3. Tente reiniciar: `docker-compose restart app_dev`
+
+### Resetar tudo:
+
+```bash
+docker-compose down -v
+docker-compose up mysql app_dev -d
+```
