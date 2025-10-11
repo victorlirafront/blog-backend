@@ -46,17 +46,6 @@ User: root
 Password: (vazia)
 Database: blog_db
 ```
-
-## 📊 Estrutura
-
-```
-docker/
-├── mysql/
-│   └── init/
-│       └── 01-init.sql    # Scripts de inicialização
-└── README-DOCKER.md        # Este arquivo
-```
-
 ## 🔧 Comandos Úteis
 
 ```bash
