@@ -1,6 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { CreatePostDto, UpdatePostDto, PaginationDto } from '../dto';
 import { PaginationResponse, PostResponse } from '../views/post.response';
 import { PostModel } from '../entities/post.entity';
@@ -9,6 +11,7 @@ import { PostModel } from '../entities/post.entity';
 export class PostService {
   constructor(
     @InjectRepository(PostModel) private postRepository: Repository<PostModel>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   private paginate<T>(data: T[], page = 1, limit = 8): PaginationResponse<T> {
@@ -37,11 +40,31 @@ export class PostService {
   ): Promise<PaginationResponse<PostResponse>> {
     const { page = 1, limit = 8 } = paginationDto;
 
+    // Chave de cache única para cada combinação de page/limit
+    const cacheKey = `posts:all:page:${page}:limit:${limit}`;
+
+    // Tentar buscar do cache primeiro
+    const cachedData =
+      await this.cacheManager.get<PaginationResponse<PostResponse>>(cacheKey);
+
+    if (cachedData) {
+      console.log('✅ Cache HIT - Retornando do Redis');
+      return cachedData;
+    }
+
+    console.log('❌ Cache MISS - Buscando do MySQL');
+
+    // Se não estiver no cache, buscar do banco
     const posts = await this.postRepository.find({
       order: { date: 'DESC' },
     });
 
-    return this.paginate(posts, page, limit);
+    const result = this.paginate(posts, page, limit);
+
+    // Salvar no cache por 5 minutos (300 segundos)
+    await this.cacheManager.set(cacheKey, result, 300000);
+
+    return result;
   }
 
   async create(createPostDto: CreatePostDto): Promise<PostResponse> {
