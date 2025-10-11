@@ -40,21 +40,15 @@ export class PostService {
   ): Promise<PaginationResponse<PostResponse>> {
     const { page = 1, limit = 8 } = paginationDto;
 
-    // Chave de cache única para cada combinação de page/limit
     const cacheKey = `posts:all:page:${page}:limit:${limit}`;
 
-    // Tentar buscar do cache primeiro
     const cachedData =
       await this.cacheManager.get<PaginationResponse<PostResponse>>(cacheKey);
 
     if (cachedData) {
-      console.log('✅ Cache HIT - Retornando do Redis');
       return cachedData;
     }
 
-    console.log('❌ Cache MISS - Buscando do MySQL');
-
-    // Se não estiver no cache, buscar do banco
     const posts = await this.postRepository.find({
       order: { date: 'DESC' },
     });
@@ -142,6 +136,17 @@ export class PostService {
   }
 
   async findBySlug(slug: string): Promise<PostResponse> {
+    const cacheKey = `post:slug:${slug}`;
+
+    const cachedPost = await this.cacheManager.get<PostResponse>(cacheKey);
+
+    if (cachedPost) {
+      console.log(`✅ Cache HIT - Post "${slug}" retornado do Redis`);
+      return cachedPost;
+    }
+
+    console.log(`❌ Cache MISS - Buscando post "${slug}" do MySQL`);
+
     const post = await this.postRepository
       .createQueryBuilder('post')
       .where('post.slug = :slug', { slug })
@@ -152,6 +157,9 @@ export class PostService {
         `Post com slug "${slug}" não foi encontrado.`,
       );
     }
+
+    // Salvar no cache por 10 minutos (600 segundos)
+    await this.cacheManager.set(cacheKey, post, 600000);
 
     return post;
   }
