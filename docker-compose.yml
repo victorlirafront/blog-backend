@@ -1,29 +1,21 @@
 version: '3.8'
 
 services:
-  # MySQL Database (Development/Homologation)
+  # MySQL Database (Production - Clever Cloud)
   mysql:
-    image: mysql:8.0
-    container_name: blog_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD: ""
-      MYSQL_DATABASE: ${BLOG_DATABASE:-blog_db}
+    image: mysql:8.0 
+    container_name: blog_mysql 
+    restart: unless-stopped 
+    environment: 
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes 
+      MYSQL_DATABASE: ${BLOG_DATABASE} 
     ports:
-      - "${BLOG_DB_PORT:-3306}:3306"
+      - "${BLOG_DB_PORT}:3306" 
     volumes:
       - mysql_data:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
     networks:
       - blog_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   # NestJS Application
   app:
@@ -70,13 +62,12 @@ services:
       - BLOG_DB_PORT=3306
       - BLOG_USERNAME=root
       - BLOG_PASSWORD=
-      - BLOG_DATABASE=${BLOG_DATABASE:-blog_db}
+      - BLOG_DATABASE=${BLOG_DATABASE}
       - RESEND_API_KEY=${RESEND_API_KEY}
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     networks:
       - blog_network
     volumes:

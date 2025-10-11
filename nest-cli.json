@@ -4,11 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "watchAssets": true,
-    "assets": ["**/*.json", "**/*.hbs"],
     "webpack": true,
     "webpackConfigPath": "webpack.config.js"
-  },
-  "monorepo": false,
-  "root": "src"
+  }
 }
