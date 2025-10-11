@@ -26,15 +26,22 @@ dotenv.config();
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: async () => {
-        const store = await redisStore({
-          socket: {
-            host: process.env.REDIS_HOST || 'localhost',
-            port: Number(process.env.REDIS_PORT) || 6379,
-          },
-          ttl: 300, // 5 minutos padrão
-        });
-
-        return { store };
+        try {
+          console.log('🔄 Configurando Redis...');
+          const store = await redisStore({
+            socket: {
+              host: process.env.REDIS_HOST || 'localhost',
+              port: Number(process.env.REDIS_PORT) || 6379,
+            },
+            ttl: 300, // 5 minutos padrão
+          });
+          console.log('✅ Redis configurado com sucesso!');
+          return { store };
+        } catch (error) {
+          console.error('❌ Erro ao conectar Redis:', error.message);
+          console.log('⚠️  Usando cache em memória como fallback');
+          return {}; // Fallback para cache em memória
+        }
       },
     }),
     PostsModule,
