@@ -39,7 +39,6 @@ export class PostService {
     paginationDto: PaginationDto,
   ): Promise<PaginationResponse<PostResponse>> {
     const { page = 1, limit = 8 } = paginationDto;
-
     const cacheKey = `posts:all:page:${page}:limit:${limit}`;
 
     const cachedData =
@@ -55,15 +54,15 @@ export class PostService {
 
     const result = this.paginate(posts, page, limit);
 
-    // Salvar no cache por 5 minutos (300 segundos)
-    await this.cacheManager.set(cacheKey, result, 300000);
+    await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
 
     return result;
   }
 
   async create(createPostDto: CreatePostDto): Promise<PostResponse> {
     const newPost = this.postRepository.create(createPostDto);
-    return this.postRepository.save(newPost);
+    const savedPost = await this.postRepository.save(newPost);
+    return savedPost;
   }
 
   async update(id: number, updatePostDto: UpdatePostDto): Promise<void> {
@@ -88,7 +87,6 @@ export class PostService {
       order: { date: 'DESC' },
     });
 
-    // Retorna todos os resultados encontrados
     return {
       totalPages: posts.length > 0 ? 1 : 0,
       results: posts,
@@ -96,11 +94,21 @@ export class PostService {
   }
 
   async findById(id: number): Promise<PostResponse> {
+    const cacheKey = `post:id:${id}`;
+
+    const cachedPost = await this.cacheManager.get<PostResponse>(cacheKey);
+
+    if (cachedPost) {
+      return cachedPost;
+    }
+
     const post = await this.postRepository.findOne({ where: { id } });
 
     if (!post) {
       throw new NotFoundException(`Post com ID ${id} não foi encontrado.`);
     }
+
+    await this.cacheManager.set(cacheKey, post, 600000); // 10 minutos
 
     return post;
   }
@@ -108,31 +116,55 @@ export class PostService {
   async findByAuthor(
     author: string,
   ): Promise<PaginationResponse<PostResponse>> {
+    const cacheKey = `posts:author:${author}`;
+
+    const cachedData =
+      await this.cacheManager.get<PaginationResponse<PostResponse>>(cacheKey);
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     const posts = await this.postRepository.find({
       where: { author },
       order: { date: 'DESC' },
     });
 
-    // Retorna todos os resultados encontrados do autor
-    return {
+    const result = {
       totalPages: posts.length > 0 ? 1 : 0,
       results: posts,
     };
+
+    await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
+
+    return result;
   }
 
   async findByCategory(
     category: string,
   ): Promise<PaginationResponse<PostResponse>> {
+    const cacheKey = `posts:category:${category}`;
+
+    const cachedData =
+      await this.cacheManager.get<PaginationResponse<PostResponse>>(cacheKey);
+
+    if (cachedData) {
+      return cachedData;
+    }
+
     const posts = await this.postRepository.find({
       where: { category },
       order: { date: 'DESC' },
     });
 
-    // Retorna todos os resultados encontrados na categoria
-    return {
+    const result = {
       totalPages: posts.length > 0 ? 1 : 0,
       results: posts,
     };
+
+    await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
+
+    return result;
   }
 
   async findBySlug(slug: string): Promise<PostResponse> {
@@ -141,11 +173,8 @@ export class PostService {
     const cachedPost = await this.cacheManager.get<PostResponse>(cacheKey);
 
     if (cachedPost) {
-      console.log(`✅ Cache HIT - Post "${slug}" retornado do Redis`);
       return cachedPost;
     }
-
-    console.log(`❌ Cache MISS - Buscando post "${slug}" do MySQL`);
 
     const post = await this.postRepository
       .createQueryBuilder('post')
@@ -158,8 +187,7 @@ export class PostService {
       );
     }
 
-    // Salvar no cache por 10 minutos (600 segundos)
-    await this.cacheManager.set(cacheKey, post, 600000);
+    await this.cacheManager.set(cacheKey, post, 600000); // 10 minutos
 
     return post;
   }
