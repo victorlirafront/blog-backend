@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node src/seeds/create-posts.ts",
-    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/data-source.dev.ts",
+    "migration:generate": "node scripts/generate-migration.js",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.dev.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.dev.ts",

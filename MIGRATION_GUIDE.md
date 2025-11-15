@@ -9,8 +9,10 @@ Faça as mudanças na entidade primeiro (criar coluna, alterar tipo, etc).
 ### 2. Gere a migration
 
 ```bash
-npm run migration:generate src/migrations/NomeDaMigration
+npm run migration:generate NomeDaMigration
 ```
+
+O script automaticamente cria o arquivo em `src/migrations/`.
 
 ### 3. Verifique o código
 
@@ -32,7 +34,7 @@ Inclua o arquivo `src/migrations/xxxx-NomeDaMigration.ts` no commit.
 
 ```bash
 # Gerar migration (só desenvolvimento)
-npm run migration:generate src/migrations/NomeDaMigration
+npm run migration:generate NomeDaMigration
 
 # Executar migrations no banco
 npm run migration:run
