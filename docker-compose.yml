@@ -97,7 +97,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run start:dev
+    command: sh -c "chmod +x scripts/start-dev.sh && ./scripts/start-dev.sh"
 
   # Seed service (optional)
   seed:

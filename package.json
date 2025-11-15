@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && npm run build:migrations",
+    "build:migrations": "tsc -p tsconfig.migrations.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -19,6 +20,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node src/seeds/create-posts.ts",
+    "migration:generate": "node scripts/generate-migration.js",
+    "migration:create": "typeorm-ts-node-commonjs migration:create",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.dev.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.dev.ts",
+    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/data-source.dev.ts",
+    "typeorm:migration:run": "node scripts/run-migrations.js",
     "ci:test": "npm run lint && npm test && npm run test:cov && npm run build",
     "ci:full": "npm ci && npm run lint && npm test && npm run test:cov && npm run build",
     "prepare": "husky"
