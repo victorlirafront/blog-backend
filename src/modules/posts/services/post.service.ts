@@ -38,8 +38,8 @@ export class PostService {
   async findAll(
     paginationDto: PaginationDto,
   ): Promise<PaginationResponse<PostResponse>> {
-    const { page = 1, limit = 8 } = paginationDto;
-    const cacheKey = `posts:all:page:${page}:limit:${limit}`;
+    const { page = 1, limit = 8, category } = paginationDto;
+    const cacheKey = `posts:${category || 'all'}:page:${page}:limit:${limit}`;
 
     const cachedData =
       await this.cacheManager.get<PaginationResponse<PostResponse>>(cacheKey);
@@ -48,7 +48,10 @@ export class PostService {
       return cachedData;
     }
 
+    const whereCondition = category && category !== 'all' ? { category } : {};
+
     const posts = await this.postRepository.find({
+      where: whereCondition,
       order: { date: 'DESC' },
     });
 
