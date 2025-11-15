@@ -8,5 +8,5 @@
     "sourceMap": false,
     "incremental": false
   },
-  "include": ["src/migrations/**/*.ts"]
+  "include": ["src/migrations/**/*.ts", "src/data-source.ts"]
 }

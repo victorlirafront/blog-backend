@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   password: process.env.BLOG_PASSWORD || '',
   database: process.env.BLOG_DATABASE || 'blog_db',
   entities: [PostModel],
-  migrations: ['dist/migrations/**/*.js'],
+  migrations: ['src/migrations/**/*.ts'],
   migrationsTableName: 'migrations',
   synchronize: false,
 });
