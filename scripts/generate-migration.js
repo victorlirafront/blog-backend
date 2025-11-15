@@ -14,9 +14,7 @@ if (!migrationName || migrationName.trim() === '') {
 
 const basePath = path.join('src', 'migrations');
 const migrationPath = path.join(basePath, migrationName).replace(/\\/g, '/');
-const dataSourcePath = path
-  .join('src', 'data-source.dev.ts')
-  .replace(/\\/g, '/');
+const dataSourcePath = path.join('src', 'data-source.ts').replace(/\\/g, '/');
 
 try {
   console.log(`Gerando migration em: ${migrationPath}...`);

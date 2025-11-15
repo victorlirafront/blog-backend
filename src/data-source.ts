@@ -4,6 +4,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const isProduction =
+  process.env.NODE_ENV === 'production' || __dirname.includes('dist');
+
 export const AppDataSource = new DataSource({
   type: 'mysql',
   host: process.env.BLOG_HOST || 'localhost',
@@ -12,7 +15,9 @@ export const AppDataSource = new DataSource({
   password: process.env.BLOG_PASSWORD || '',
   database: process.env.BLOG_DATABASE || 'blog_db',
   entities: [PostModel],
-  migrations: ['dist/migrations/**/*.js'],
+  migrations: isProduction
+    ? ['dist/migrations/**/*.js']
+    : ['src/migrations/**/*.ts'],
   migrationsTableName: 'migrations',
   synchronize: false,
 });
