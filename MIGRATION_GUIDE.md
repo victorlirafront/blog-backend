@@ -1,152 +1,74 @@
-# 📝 **Instruções para criar migrations (Nest + TypeORM)**
+# 📝 **Guia de Migrations (Nest + TypeORM)**
 
-Quando você precisar criar ou alterar alguma tabela no banco, siga este passo a passo:
+## ✅ **Passo a passo**
 
----
+### 1. Atualize a entidade
 
-## ✅ **1. Atualize ou crie a entidade correspondente**
+Faça as mudanças na entidade primeiro (criar coluna, alterar tipo, etc).
 
-Exemplo:
-
-- Criar coluna nova
-- Alterar tipo
-- Criar nova entidade
-- Adicionar relacionamento
-
-Sempre faça a mudança primeiro no código (entity).
-
----
-
-## ✅ **2. Gere a migration localmente**
-
-Depois que a entidade estiver pronta, execute:
+### 2. Gere a migration
 
 ```bash
 npm run migration:generate src/migrations/NomeDaMigration
 ```
 
-Esse comando vai criar um arquivo dentro da pasta `src/migrations` com base nas diferenças entre suas entidades e o banco de dados atual.
+### 3. Verifique o código
 
-**Nota:** O comando compara o estado atual do banco com suas entidades e gera automaticamente a migration necessária.
+Confira se o `up()` e `down()` estão corretos.
 
----
-
-## ✅ **3. Verifique o conteúdo da migration**
-
-Antes de commitar:
-
-- Confira se o `up()` faz exatamente o que você espera
-- Confira se o `down()` desfaz corretamente
-- Veja se não tem comandos extras ou inesperados
-
-Se estiver errado: ajuste manualmente ou gere novamente.
-
----
-
-## ✅ **4. Rode a migration no ambiente local**
-
-Para garantir que ela funciona de verdade:
+### 4. Execute no banco
 
 ```bash
 npm run migration:run
 ```
 
-Depois teste o rollback:
+### 5. Commit
+
+Inclua o arquivo `src/migrations/xxxx-NomeDaMigration.ts` no commit.
+
+---
+
+## 🔧 **Comandos**
 
 ```bash
-npm run migration:revert
-```
-
-Se tudo estiver ok, rode novamente o run:
-
-```bash
-npm run migration:run
-```
-
----
-
-## ✅ **5. Adicione no commit**
-
-Inclua o arquivo da migration no seu PR:
-
-```
-src/migrations/xxxx-NomeDaMigration.ts
-```
-
-Nunca deixe migrations de fora do commit.
-
----
-
-## ❌ **6. O que NÃO fazer**
-
-- ❌ **NÃO** gerar migrations no CI/CD ou produção (`migration:generate`)
-- ❌ **NÃO** editar o banco manualmente
-- ❌ **NÃO** usar `synchronize: true` em produção
-- ❌ **NÃO** criar migrations direto na produção
-- ❌ **NÃO** deixar migrations com nome genérico (tipo: `Migration123`)
-- ❌ **NÃO** executar `migration:generate` em produção (só em desenvolvimento)
-
----
-
-## ✔️ **Resumo rápido**
-
-```
-1. Ajustar entidade
-2. Gerar migration
-3. Validar código da migration
-4. Rodar localmente (run → revert → run)
-5. Committar e enviar para revisão
-```
-
----
-
-## 🔧 **Comandos disponíveis**
-
-```bash
-# Gerar migration automaticamente (APENAS em desenvolvimento)
+# Gerar migration (só desenvolvimento)
 npm run migration:generate src/migrations/NomeDaMigration
-# ⚠️ NUNCA use em produção! Apenas em desenvolvimento.
 
-# Criar migration vazia (para editar manualmente)
-npm run migration:create src/migrations/NomeDaMigration
-# ⚠️ Apenas em desenvolvimento.
-
-# Executar migrations pendentes (pode usar em produção)
+# Executar migrations no banco
 npm run migration:run
-# ✅ Use em produção para aplicar migrations já criadas e testadas.
+
+# Ver status
+npm run migration:show
 
 # Reverter última migration
 npm run migration:revert
-# ⚠️ Use com cuidado, principalmente em produção.
-
-# Ver status das migrations
-npm run migration:show
-# ✅ Pode usar em qualquer ambiente.
 ```
 
 ---
 
-## ⚠️ **IMPORTANTE: Comandos por ambiente**
+## ⚠️ **Importante**
 
-### ✅ **Desenvolvimento (pode usar todos):**
+### ✅ **Desenvolvimento:**
 
-- `migration:generate` - Gerar migrations automaticamente
-- `migration:create` - Criar migration vazia
-- `migration:run` - Executar migrations
-- `migration:revert` - Reverter migrations
-- `migration:show` - Ver status
+- Pode usar todos os comandos
 
-### ✅ **Produção (apenas estes):**
+### ✅ **Produção:**
 
-- `migration:run` - Executar migrations já criadas e testadas
-- `migration:show` - Ver status das migrations
+- Apenas `migration:run` e `migration:show`
 
 ### ❌ **NUNCA em produção:**
 
-- `migration:generate` - Pode gerar migrations inesperadas
-- `migration:create` - Não faz sentido criar migrations em produção
-- `migration:revert` - Use apenas em emergências e com muito cuidado
+- `migration:generate` - Não gere migrations em produção
+- `migration:create` - Não crie migrations em produção
+- `migration:revert` - Use só em emergências
 
 ---
 
-**Pronto!** Agora você tem tudo configurado para trabalhar com migrations no projeto.
+## ❌ **O que NÃO fazer**
+
+- ❌ Gerar migrations no CI/CD ou produção
+- ❌ Editar o banco manualmente
+- ❌ Usar `synchronize: true` em produção
+- ❌ Deixar migrations com nome genérico
+
+---
