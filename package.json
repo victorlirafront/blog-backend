@@ -28,7 +28,7 @@
     "typeorm:migration:run": "node scripts/run-migrations.js",
     "ci:test": "npm run lint && npm test && npm run test:cov && npm run build",
     "ci:full": "npm ci && npm run lint && npm test && npm run test:cov && npm run build",
-    "prepare": "husky"
+    "prepare": "node scripts/prepare.js || true"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^3.0.1",
