@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './modules/posts/posts.module';
 import { EmailModule } from './modules/email/email.module';
+import { PostModel } from './modules/posts/entities/post.entity';
 import * as dotenv from 'dotenv';
 import { redisStore } from 'cache-manager-redis-store';
 
@@ -21,9 +22,9 @@ const _dirname = __dirname;
       username: process.env.BLOG_USERNAME,
       password: process.env.BLOG_PASSWORD,
       database: process.env.BLOG_DATABASE,
-      entities: [`${_dirname}/**/*.entity{.js,.ts}`],
+      entities: [PostModel],
       migrations: [`${_dirname}/migrations/*.js`],
-      migrationsRun: false, // Execute migrations manualmente via CLI (npm run migration:run)
+      migrationsRun: false,
       synchronize: false,
     }),
     CacheModule.registerAsync({
