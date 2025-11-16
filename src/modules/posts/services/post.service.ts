@@ -52,7 +52,7 @@ export class PostService {
 
     const posts = await this.postRepository.find({
       where: whereCondition,
-      order: { date: 'DESC' },
+      order: { updated_at: 'DESC', date: 'DESC' },
     });
 
     const result = this.paginate(posts, page, limit);
