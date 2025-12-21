@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -25,11 +27,13 @@ export class PostController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() createPostDto: CreatePostDto): Promise<PostResponse> {
     return this.postService.create(createPostDto);
   }
 
   @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePostDto: UpdatePostDto,
@@ -38,6 +42,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.postService.delete(id);
   }
