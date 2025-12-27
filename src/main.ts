@@ -6,6 +6,8 @@ async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
 
+    app.getHttpAdapter().getInstance().set('trust proxy', true);
+
     app.enableCors({
       origin: '*',
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
