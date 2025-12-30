@@ -3,16 +3,14 @@ import {
   NotFoundException,
   BadRequestException,
   InternalServerErrorException,
-  Inject,
   Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 import { CreatePostDto, UpdatePostDto, PaginationDto } from '../dto';
 import { PaginationResponse, PostResponse } from '../views/post.response';
 import { PostModel } from '../entities/post.entity';
+import { CacheService, CACHE_KEYS, CACHE_TTL } from '../../../common/cache';
 
 @Injectable()
 export class PostService {
@@ -20,7 +18,7 @@ export class PostService {
 
   constructor(
     @InjectRepository(PostModel) private postRepository: Repository<PostModel>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private cacheService: CacheService,
   ) {}
 
   private paginate<T>(data: T[], page = 1, limit = 8): PaginationResponse<T> {
@@ -49,23 +47,13 @@ export class PostService {
   ): Promise<PaginationResponse<PostResponse>> {
     try {
       const { page = 1, limit = 8, category } = paginationDto;
-      const cacheKey = `posts:${category || 'all'}:page:${page}:limit:${limit}`;
+      const cacheKey = CACHE_KEYS.POSTS_LIST(category || 'all', page, limit);
 
-      try {
-        const cachedData =
-          await this.cacheManager.get<PaginationResponse<PostResponse>>(
-            cacheKey,
-          );
+      const cachedData =
+        await this.cacheService.get<PaginationResponse<PostResponse>>(cacheKey);
 
-        if (cachedData) {
-          return cachedData;
-        }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao acessar cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
+      if (cachedData) {
+        return cachedData;
       }
 
       const whereCondition = category && category !== 'all' ? { category } : {};
@@ -77,15 +65,7 @@ export class PostService {
 
       const result = this.paginate(posts, page, limit);
 
-      try {
-        await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao salvar no cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
-      }
+      await this.cacheService.set(cacheKey, result, CACHE_TTL.SHORT);
 
       return result;
     } catch (error) {
@@ -108,8 +88,18 @@ export class PostService {
       const newPost = this.postRepository.create(createPostDto);
       const savedPost = await this.postRepository.save(newPost);
 
-      // Nota: Cache expirará naturalmente pelo TTL
-      // Invalidar apenas chaves específicas se necessário
+      await this.cacheService.invalidatePostsListCache();
+
+      if (savedPost.author) {
+        await this.cacheService.del(
+          CACHE_KEYS.POSTS_BY_AUTHOR(savedPost.author),
+        );
+      }
+      if (savedPost.category) {
+        await this.cacheService.del(
+          CACHE_KEYS.POSTS_BY_CATEGORY(savedPost.category),
+        );
+      }
 
       return savedPost;
     } catch (error) {
@@ -142,19 +132,16 @@ export class PostService {
         throw new NotFoundException(`Post com ID ${id} não foi encontrado.`);
       }
 
-      // Invalidar cache relacionado
-      try {
-        const post = await this.postRepository.findOne({ where: { id } });
-        if (post) {
-          await this.cacheManager.del(`post:id:${id}`);
-          await this.cacheManager.del(`post:slug:${post.slug}`);
-          // Nota: Cache de listagens expirará naturalmente pelo TTL
+      const post = await this.postRepository.findOne({ where: { id } });
+
+      if (post) {
+        await this.cacheService.invalidatePostCache(id, post.slug, post.author);
+        await this.cacheService.invalidatePostsListCache();
+        if (post.category) {
+          await this.cacheService.del(
+            CACHE_KEYS.POSTS_BY_CATEGORY(post.category),
+          );
         }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao invalidar cache para post ID ${id}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
       }
     } catch (error) {
       if (
@@ -190,18 +177,11 @@ export class PostService {
         throw new NotFoundException(`Post com ID ${id} não foi encontrado.`);
       }
 
-      // Invalidar cache relacionado
-      try {
-        await this.cacheManager.del(`post:id:${id}`);
-        await this.cacheManager.del(`post:slug:${post.slug}`);
-        if (post.author) {
-          await this.cacheManager.del(`posts:author:${post.author}`);
-        }
-        // Nota: Cache de listagens expirará naturalmente pelo TTL
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao invalidar cache para post ID ${id}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
+      await this.cacheService.invalidatePostCache(id, post.slug, post.author);
+      await this.cacheService.invalidatePostsListCache();
+      if (post.category) {
+        await this.cacheService.del(
+          CACHE_KEYS.POSTS_BY_CATEGORY(post.category),
         );
       }
     } catch (error) {
@@ -260,20 +240,12 @@ export class PostService {
         throw new BadRequestException('ID do post inválido');
       }
 
-      const cacheKey = `post:id:${id}`;
+      const cacheKey = CACHE_KEYS.POST_BY_ID(id);
 
-      try {
-        const cachedPost = await this.cacheManager.get<PostResponse>(cacheKey);
+      const cachedPost = await this.cacheService.get<PostResponse>(cacheKey);
 
-        if (cachedPost) {
-          return cachedPost;
-        }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao acessar cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
+      if (cachedPost) {
+        return cachedPost;
       }
 
       const post = await this.postRepository.findOne({ where: { id } });
@@ -282,15 +254,7 @@ export class PostService {
         throw new NotFoundException(`Post com ID ${id} não foi encontrado.`);
       }
 
-      try {
-        await this.cacheManager.set(cacheKey, post, 600000); // 10 minutos
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao salvar no cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
-      }
+      await this.cacheService.set(cacheKey, post, CACHE_TTL.MEDIUM);
 
       return post;
     } catch (error) {
@@ -316,23 +280,13 @@ export class PostService {
         throw new BadRequestException('Nome do autor não pode estar vazio');
       }
 
-      const cacheKey = `posts:author:${author.trim()}`;
+      const cacheKey = CACHE_KEYS.POSTS_BY_AUTHOR(author.trim());
 
-      try {
-        const cachedData =
-          await this.cacheManager.get<PaginationResponse<PostResponse>>(
-            cacheKey,
-          );
+      const cachedData =
+        await this.cacheService.get<PaginationResponse<PostResponse>>(cacheKey);
 
-        if (cachedData) {
-          return cachedData;
-        }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao acessar cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
+      if (cachedData) {
+        return cachedData;
       }
 
       const posts = await this.postRepository.find({
@@ -345,15 +299,7 @@ export class PostService {
         results: posts,
       };
 
-      try {
-        await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao salvar no cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
-      }
+      await this.cacheService.set(cacheKey, result, CACHE_TTL.SHORT);
 
       return result;
     } catch (error) {
@@ -376,23 +322,13 @@ export class PostService {
         throw new BadRequestException('Categoria não pode estar vazia');
       }
 
-      const cacheKey = `posts:category:${category.trim()}`;
+      const cacheKey = CACHE_KEYS.POSTS_BY_CATEGORY(category.trim());
 
-      try {
-        const cachedData =
-          await this.cacheManager.get<PaginationResponse<PostResponse>>(
-            cacheKey,
-          );
+      const cachedData =
+        await this.cacheService.get<PaginationResponse<PostResponse>>(cacheKey);
 
-        if (cachedData) {
-          return cachedData;
-        }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao acessar cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
+      if (cachedData) {
+        return cachedData;
       }
 
       const posts = await this.postRepository.find({
@@ -405,15 +341,7 @@ export class PostService {
         results: posts,
       };
 
-      try {
-        await this.cacheManager.set(cacheKey, result, 300000); // 5 minutos
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao salvar no cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
-      }
+      await this.cacheService.set(cacheKey, result, CACHE_TTL.SHORT);
 
       return result;
     } catch (error) {
@@ -436,20 +364,12 @@ export class PostService {
         throw new BadRequestException('Slug não pode estar vazio');
       }
 
-      const cacheKey = `post:slug:${slug.trim()}`;
+      const cacheKey = CACHE_KEYS.POST_BY_SLUG(slug.trim());
 
-      try {
-        const cachedPost = await this.cacheManager.get<PostResponse>(cacheKey);
+      const cachedPost = await this.cacheService.get<PostResponse>(cacheKey);
 
-        if (cachedPost) {
-          return cachedPost;
-        }
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao acessar cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
+      if (cachedPost) {
+        return cachedPost;
       }
 
       const post = await this.postRepository
@@ -463,15 +383,7 @@ export class PostService {
         );
       }
 
-      try {
-        await this.cacheManager.set(cacheKey, post, 600000); // 10 minutos
-      } catch (cacheError) {
-        this.logger.warn(
-          `Erro ao salvar no cache para chave ${cacheKey}`,
-          cacheError instanceof Error ? cacheError.stack : String(cacheError),
-        );
-        // Continua sem cache
-      }
+      await this.cacheService.set(cacheKey, post, CACHE_TTL.MEDIUM);
 
       return post;
     } catch (error) {
