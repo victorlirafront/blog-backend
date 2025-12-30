@@ -47,7 +47,7 @@ const _dirname = __dirname;
               host: config.get<string>('REDIS_HOST') || 'localhost',
               port: Number(config.get<string>('REDIS_PORT')) || 6379,
             },
-            ttl: 300, // 5 minutos padrão
+            ttl: 300000,
           });
           console.log('✅ Redis configurado com sucesso!');
           return { store };
