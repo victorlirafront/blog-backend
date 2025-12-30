@@ -11,7 +11,7 @@ export class PostModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 256 })
   title: string;
 
   @Column({ type: 'text' })
