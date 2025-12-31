@@ -48,7 +48,7 @@ describe('EmailController', () => {
 
       // Assert
       expect(service.sendEmail).toHaveBeenCalledWith(emailData);
-      expect(result.message).toBe('Email enviado com sucesso');
+      expect(result.message).toBe('Email sent successfully');
       expect(result.success).toBe(true);
       expect(result.timestamp).toBeInstanceOf(Date);
     });
