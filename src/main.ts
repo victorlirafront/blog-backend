@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -26,6 +26,12 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
     const PORT = configService.get<number>('PORT') || 3001;
 
+    // Enable API Versioning
+    app.enableVersioning({
+      type: VersioningType.URI,
+      defaultVersion: '1',
+    });
+
     app.setGlobalPrefix('api');
 
     // Swagger Configuration
@@ -33,6 +39,7 @@ async function bootstrap() {
       .setTitle('Blog API')
       .setDescription('API for managing blog posts and sending emails')
       .setVersion('1.0')
+      .addServer('/api/v1', 'Version 1')
       .addTag('health', 'API health check endpoints')
       .addTag('posts', 'Blog post management endpoints')
       .addTag('email', 'Email sending endpoints')
@@ -43,7 +50,7 @@ async function bootstrap() {
     await app.listen(PORT, '0.0.0.0');
 
     console.log(`🚀 Server is running on http://0.0.0.0:${PORT}`);
-    console.log(`📊 API endpoints available at http://0.0.0.0:${PORT}/api`);
+    console.log(`📊 API endpoints available at http://0.0.0.0:${PORT}/api/v1`);
     console.log(
       `📚 Swagger documentation available at http://0.0.0.0:${PORT}/api/docs`,
     );
