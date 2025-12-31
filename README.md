@@ -86,11 +86,19 @@ docker-compose restart app_dev
 
 ## 🎯 URLs e Portas
 
-- **Backend API**: http://localhost:3002/api
+- **Backend API**: http://localhost:3002/api/v1
 - **Swagger Documentation**: http://localhost:3002/api/docs
 - **MySQL**: localhost:3306
-- **Posts**: http://localhost:3002/api/get
-- **Busca por slug**: http://localhost:3002/api/get/slug/:slug
+- **Posts**: http://localhost:3002/api/v1/get
+- **Busca por slug**: http://localhost:3002/api/v1/get/slug/:slug
+
+### 📌 Versionamento da API
+
+A API utiliza versionamento por URL (URI versioning). A versão atual é **v1**.
+
+- **Versão 1**: `/api/v1/*`
+- Exemplo: `GET /api/v1/get` (listar posts)
+- Exemplo: `POST /api/v1/sendEmail` (enviar email)
 
 ## 📝 Variáveis de Ambiente
 

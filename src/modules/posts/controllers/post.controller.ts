@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  Version,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -27,11 +28,12 @@ import {
 } from '../views/post.response';
 
 @ApiTags('posts')
-@Controller('get')
+@Controller({ path: 'get', version: '1' })
 export class PostController {
   constructor(private postService: PostService) {}
 
   @Get()
+  @Version('1')
   @ApiOperation({
     summary: 'List all posts',
     description:
@@ -49,6 +51,7 @@ export class PostController {
   }
 
   @Post()
+  @Version('1')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: 'Create a new post',
@@ -68,6 +71,7 @@ export class PostController {
   }
 
   @Put(':id')
+  @Version('1')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Update a post',
@@ -90,6 +94,7 @@ export class PostController {
   }
 
   @Delete(':id')
+  @Version('1')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Delete a post',
@@ -109,6 +114,7 @@ export class PostController {
   }
 
   @Get('search')
+  @Version('1')
   @ApiOperation({
     summary: 'Search posts',
     description: 'Searches for posts by term in title and content.',
@@ -126,6 +132,7 @@ export class PostController {
   }
 
   @Get('author/:author')
+  @Version('1')
   @ApiOperation({
     summary: 'Get posts by author',
     description: 'Returns all posts from a specific author.',
@@ -143,6 +150,7 @@ export class PostController {
   }
 
   @Get('category/:category')
+  @Version('1')
   @ApiOperation({
     summary: 'Get posts by category',
     description: 'Returns all posts from a specific category.',
@@ -164,6 +172,7 @@ export class PostController {
   }
 
   @Get('slug/:slug')
+  @Version('1')
   @ApiOperation({
     summary: 'Get post by slug',
     description:
@@ -188,6 +197,7 @@ export class PostController {
   }
 
   @Get(':id')
+  @Version('1')
   @ApiOperation({
     summary: 'Get post by ID',
     description: 'Returns a specific post by its ID.',

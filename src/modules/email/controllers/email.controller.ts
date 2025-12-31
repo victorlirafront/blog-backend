@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Version } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmailService } from '../services/email.service';
 import { SendEmailDto } from '../dto/send-email.dto';
@@ -6,11 +6,12 @@ import { EmailResponse } from '../views/email.response';
 import { SendEmailTransformPipe } from '../pipes/send-email-transform.pipe';
 
 @ApiTags('email')
-@Controller()
+@Controller({ version: '1' })
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
   @Post('sendEmail')
+  @Version('1')
   @ApiOperation({
     summary: 'Send email',
     description: 'Sends a contact email through the system.',
