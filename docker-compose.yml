@@ -97,7 +97,8 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "chmod +x scripts/start-dev.sh && ./scripts/start-dev.sh"
+    working_dir: /app
+    command: sh -c "npm run migration:run || true && npm run start:dev"
 
   # Seed service (optional)
   seed:

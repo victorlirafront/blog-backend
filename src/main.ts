@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   try {
@@ -26,10 +27,26 @@ async function bootstrap() {
     const PORT = configService.get<number>('PORT') || 3001;
 
     app.setGlobalPrefix('api');
+
+    // Swagger Configuration
+    const config = new DocumentBuilder()
+      .setTitle('Blog API')
+      .setDescription('API for managing blog posts and sending emails')
+      .setVersion('1.0')
+      .addTag('health', 'API health check endpoints')
+      .addTag('posts', 'Blog post management endpoints')
+      .addTag('email', 'Email sending endpoints')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api/docs', app, document);
+
     await app.listen(PORT, '0.0.0.0');
 
     console.log(`🚀 Server is running on http://0.0.0.0:${PORT}`);
     console.log(`📊 API endpoints available at http://0.0.0.0:${PORT}/api`);
+    console.log(
+      `📚 Swagger documentation available at http://0.0.0.0:${PORT}/api/docs`,
+    );
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   } catch (error) {
     console.error('Error starting the server:', error);
