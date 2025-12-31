@@ -87,6 +87,7 @@ docker-compose restart app_dev
 ## 🎯 URLs e Portas
 
 - **Backend API**: http://localhost:3002/api
+- **Swagger Documentation**: http://localhost:3002/api/docs
 - **MySQL**: localhost:3306
 - **Posts**: http://localhost:3002/api/get
 - **Busca por slug**: http://localhost:3002/api/get/slug/:slug
