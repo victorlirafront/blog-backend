@@ -1,0 +1,26 @@
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import {
+  IPostRepository,
+  POST_REPOSITORY_TOKEN,
+} from '../../domain/repositories/post.repository.interface';
+import { Post } from '../../domain/entities/post.entity';
+
+@Injectable()
+export class FindPostBySlugUseCase {
+  constructor(
+    @Inject(POST_REPOSITORY_TOKEN)
+    private readonly postRepository: IPostRepository,
+  ) {}
+
+  async execute(slug: string): Promise<Post> {
+    const post = await this.postRepository.findBySlug(slug);
+
+    if (!post) {
+      throw new NotFoundException(
+        `Post com slug "${slug}" não foi encontrado.`,
+      );
+    }
+
+    return post;
+  }
+}

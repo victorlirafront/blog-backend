@@ -5,9 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './modules/posts/posts.module';
 import { EmailModule } from './modules/email/email.module';
-import { PostModel } from './modules/posts/entities/post.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { redisStore } from 'cache-manager-redis-store';
+import { PostModel } from './modules/posts/infrastructure/models/post.model';
 import {
   LoggerMiddleware,
   RequestIdMiddleware,
