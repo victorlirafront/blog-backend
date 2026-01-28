@@ -54,7 +54,7 @@ async function bootstrap() {
     console.log(
       `📚 Swagger documentation available at http://0.0.0.0:${PORT}/api/docs`,
     );
-    console.log(`🌍 Environment one: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   } catch (error) {
     console.error('Error starting the server:', error);
     process.exit(1);
